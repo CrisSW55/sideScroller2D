@@ -1,2 +1,4 @@
 # sideScroller2D
 JavaSwing 2D Game Side Scroller
+
+The purpose is to learn and create a 2D sidescroller game, using Java's Swing GUI. I began by initializing the window and centering it with respect to the user's current monitor resolution. Then, I used Java's Runnable interface to create a gameloop, the thread.start() method initializes the run method. In addition, the thread class, run method, takes the entity's position and will be update and repaint on the GamePanel. This would involve using deltaTime,FPS, position and speed to create proper rendering of the entity's movement's. Next, the create keyhandler class takes a keypressed and keyreleased, so to properly update and repaint. In my example, I'm using Key A and Key D, for left and right movements. In conclusion, I have so far have four classes: Main.java,GamePanel.java,Entity.java, and KeyListener.java classes to create my sideScroller2DGame, which I'm having loads of fun making!
