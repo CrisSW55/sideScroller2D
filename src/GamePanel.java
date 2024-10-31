@@ -9,8 +9,9 @@ public class GamePanel extends JPanel implements Runnable{
 
     public  GamePanel(){
         kH = new KeyHandler();
-        entity = new Entity(500,100,50,50);
-        setBackground(Color.black);
+        entity = new Entity(50,350,16,16,5);
+        entity.loadImage();
+        setBackground(Color.GREEN);
         //Allows the game panel to recognize the kH being used
         this.addKeyListener(kH);
         this.setFocusable(true);
@@ -56,7 +57,7 @@ public class GamePanel extends JPanel implements Runnable{
                 System.out.println("entity screenposX moving right: " + entity.posX);
             }
         if(kH.is_LeftPressed){
-            entity.posX -= - entity.speed;
+            entity.posX -= entity.speed;
             System.out.println("entity screenposX moving left:  " + entity.posX);
         }
     }
@@ -67,7 +68,7 @@ public class GamePanel extends JPanel implements Runnable{
         super.paintComponent(g);
         Graphics2D g2= (Graphics2D) g;
         g2.setColor(Color.BLUE);
-        g2.fillRect(entity.posX, entity.posY, entity.width, entity.height);
+        g2.drawImage(entity.img,entity.posX, entity.posY, entity.width, entity.height,null);
         g2.dispose();
 
     }
