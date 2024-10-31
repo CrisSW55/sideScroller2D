@@ -28,21 +28,22 @@ public class GamePanel extends JPanel implements Runnable{
     @Override
     public void run() {
         //System.out.println("Inside game thread!");
-        long deltaTime = 0;
-        int FPS = 60;
-        long fpsInterval = 1000000000/FPS;
+        double deltaTime = 0;
+        double one_Frame = 0;
+        double FPS = 60;
+        double fpsInterval = FPS/1000000000;
         long startTime = System.nanoTime();
         while(gThread != null){
             long endTime = System.nanoTime();
-            deltaTime = deltaTime + (endTime - startTime) / fpsInterval;
-            //System.out.println("DeltaTime: " + deltaTime);
-            startTime = endTime;
-            if(deltaTime >= 1){
+            deltaTime = endTime - startTime;
+            one_Frame += deltaTime * fpsInterval;
+            if(one_Frame >= 1){
                 update();
                 //System.out.println("Inside game thread!");
                 repaint();
-                deltaTime--;
+                one_Frame--;
             }
+            startTime = endTime;
 
 
         }
@@ -51,12 +52,12 @@ public class GamePanel extends JPanel implements Runnable{
     //Handles any logic, such as entity positions
     public void update() {
             if(kH.is_RightPressed){
-                entity.screenPosX += entity.speed;
-                System.out.println("entity screenposX moving right: " + entity.screenPosX);
+                entity.posX += entity.speed;
+                System.out.println("entity screenposX moving right: " + entity.posX);
             }
         if(kH.is_LeftPressed){
-            entity.screenPosX -= - entity.speed;
-            System.out.println("entity screenposX moving left:  " + entity.screenPosX);
+            entity.posX -= - entity.speed;
+            System.out.println("entity screenposX moving left:  " + entity.posX);
         }
     }
 
@@ -66,7 +67,7 @@ public class GamePanel extends JPanel implements Runnable{
         super.paintComponent(g);
         Graphics2D g2= (Graphics2D) g;
         g2.setColor(Color.BLUE);
-        g2.fillRect(entity.screenPosX, entity.screenPosY, entity.width, entity.height);
+        g2.fillRect(entity.posX, entity.posY, entity.width, entity.height);
         g2.dispose();
 
     }
