@@ -5,13 +5,14 @@ import java.awt.event.KeyListener;
 public class GamePanel extends JPanel implements Runnable{
     Thread gThread;
     KeyHandler kH;
-    Entity entity;
-
+    Player player;
+    Color brightHorizon;
     public  GamePanel(){
         kH = new KeyHandler();
-        entity = new Entity(50,350,16,16,5);
-        entity.loadImage();
-        setBackground(Color.GREEN);
+        player = new Player(50,350,16,16,4);
+        player.loadImage();
+        brightHorizon = new Color(240, 192, 180);
+        setBackground(brightHorizon);
         //Allows the game panel to recognize the kH being used
         this.addKeyListener(kH);
         this.setFocusable(true);
@@ -53,12 +54,26 @@ public class GamePanel extends JPanel implements Runnable{
     //Handles any logic, such as entity positions
     public void update() {
             if(kH.is_RightPressed){
-                entity.posX += entity.speed;
-                System.out.println("entity screenposX moving right: " + entity.posX);
+                player.posX += player.speed;
+                player.direction = "right";
+                System.out.println("entity screenposX moving right: " + player.posX);
             }
         if(kH.is_LeftPressed){
-            entity.posX -= entity.speed;
-            System.out.println("entity screenposX moving left:  " + entity.posX);
+            player.posX -= player.speed;
+            System.out.println("entity screenposX moving left:  " + player.posX);
+        }
+        player.spriteIndex++;
+        if(player.spriteIndex>10){
+            if(player.spriteNum == 1){
+                player.spriteNum = 2;
+            }
+            else if(player.spriteNum == 2){
+                player.spriteNum = 3;
+            }
+            else if(player.spriteNum == 3){
+                player.spriteNum = 1;
+            }
+            player.spriteIndex = 0;
         }
     }
 
@@ -68,7 +83,23 @@ public class GamePanel extends JPanel implements Runnable{
         super.paintComponent(g);
         Graphics2D g2= (Graphics2D) g;
         g2.setColor(Color.BLUE);
-        g2.drawImage(entity.img,entity.posX, entity.posY, entity.width, entity.height,null);
+        if(player.direction.equals("right") && !kH.is_RightPressed){
+            g2.drawImage(player.playerImages.get(0),player.posX, player.posY, player.width, player.height,null);
+        }
+        if(player.direction.equals("right") && kH.is_RightPressed){
+            if(player.spriteNum == 1){
+                g2.drawImage(player.playerImages.get(player.spriteNum),player.posX, player.posY, player.width, player.height,null);
+            }
+            if(player.spriteNum == 2){
+                g2.drawImage(player.playerImages.get(player.spriteNum),player.posX, player.posY, player.width, player.height,null);
+            }
+            if(player.spriteNum == 3){
+                g2.drawImage(player.playerImages.get(player.spriteNum),player.posX, player.posY, player.width, player.height,null);
+            }
+
+
+        }
+
         g2.dispose();
 
     }

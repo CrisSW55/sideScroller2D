@@ -10,9 +10,11 @@ public class Entity extends Rectangle {
     int posY;
     int width;
     int height;
-    int speed = 10;
+    int scale;
+    String direction = "right";
+    public int speed;
     BufferedImage img;
-    int scale = 1;
+
 
     //Rectangle rect1 = new Rectangle(10, 20, 50, 30);
     public Entity(int x,int y, int w, int h,int scale){
@@ -23,18 +25,5 @@ public class Entity extends Rectangle {
         this.height = h * scale;
 
     }
-
-    public void loadImage(){
-        try {
-            img = ImageIO.read(getClass().getResourceAsStream("/entities/redguy.png"));
-            // Now you can use the 'image' object to manipulate or display the image
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
 
 }
