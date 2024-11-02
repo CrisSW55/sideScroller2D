@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable{
     Thread gThread;
@@ -15,7 +16,8 @@ public class GamePanel extends JPanel implements Runnable{
         brightHorizon = new Color(240, 192, 180);
         setBackground(brightHorizon);
         tileMgr = new TileManager();
-        tileMgr.loadTiles();
+        tileMgr.load_TileImages();
+        tileMgr.readTileMap();
         //Allows the game panel to recognize the kH being used
         this.addKeyListener(kH);
         this.setFocusable(true);
@@ -85,7 +87,13 @@ public class GamePanel extends JPanel implements Runnable{
     public void paintComponent (Graphics g) {
         super.paintComponent(g);
         Graphics2D g2= (Graphics2D) g;
-        g2.setColor(Color.BLUE);
+        //g2.setColor(Color.BLUE);
+        int tileWidth = 48; int tileHeight = 48;
+        for(int i = 0; i<tileMgr.tileIndex.length;i++){
+            for(int j = 0; j<12; j++){
+                g2.drawImage(tileMgr.tileImages.get(tileMgr.tileIndex[i][j]),j * tileWidth,i*tileHeight,48,48,null);
+            }
+        }
         if(player.direction.equals("right") && !kH.is_RightPressed){
             g2.drawImage(player.playerImages.get(0),player.posX, player.posY, player.width, player.height,null);
         }
@@ -102,9 +110,7 @@ public class GamePanel extends JPanel implements Runnable{
 
 
         }
-        for(int i = 0; i<tileMgr.tile_List.size();i++){
-            g2.drawImage(tileMgr.tile_List.get(i).img,tileMgr.tile_List.get(i).posX,tileMgr.tile_List.get(i).posY,null);
-        }
+
 
 
         g2.dispose();
