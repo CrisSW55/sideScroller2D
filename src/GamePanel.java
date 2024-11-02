@@ -7,12 +7,15 @@ public class GamePanel extends JPanel implements Runnable{
     KeyHandler kH;
     Player player;
     Color brightHorizon;
+    TileManager tileMgr;
     public  GamePanel(){
         kH = new KeyHandler();
         player = new Player(50,350,16,16,4);
         player.loadImage();
         brightHorizon = new Color(240, 192, 180);
         setBackground(brightHorizon);
+        tileMgr = new TileManager();
+        tileMgr.loadTiles();
         //Allows the game panel to recognize the kH being used
         this.addKeyListener(kH);
         this.setFocusable(true);
@@ -99,6 +102,10 @@ public class GamePanel extends JPanel implements Runnable{
 
 
         }
+        for(int i = 0; i<tileMgr.tile_List.size();i++){
+            g2.drawImage(tileMgr.tile_List.get(i).img,tileMgr.tile_List.get(i).posX,tileMgr.tile_List.get(i).posY,null);
+        }
+
 
         g2.dispose();
 
