@@ -45,73 +45,67 @@ public class Player extends Entity {
     }
 
     public void update(){
-        if(kH.is_RightPressed || kH.is_LeftPressed){
-            if(kH.is_RightPressed){direction = "right";posX += speed;}
-            else if(kH.is_LeftPressed){direction = "left";posX -= speed;}
+        if (kH.is_RightPressed || kH.is_LeftPressed) {
+            if (kH.is_LeftPressed) {direction = "left";posX -= speed;}
+            if (kH.is_RightPressed) {direction = "right";posX += speed;}
+            //spriteIndex is the times update get called in this case total 60 times
 
             spriteIndex++;
+            //So for every spriteIndex > 10, updates per 10 times, the spriteNum changes!
+            if (direction.equals("left") && spriteIndex > 10) {
+                spriteNum = (spriteNum % 3) + 5; // Cycle through left sprites
+                spriteIndex = 0;
+            }
+            else if (direction.equals("right") && spriteIndex > 10) {
+                spriteNum = (spriteNum % 3) + 1; // Cycle through right sprites
+                spriteIndex = 0;
+            }
+        }
+        else if(direction.equals("right")){
+            // Handle right idle state
+            spriteNum = 0; // Assuming 0 is for standing
+        }
+        else if(direction.equals("left")){
+            // Handle left idle state
+            spriteNum = 4; //Assuming 4 is for leftstanding
+        }
 
-            if(spriteIndex>10){
-                //Correct code below!
-                if(direction.equals("left")){
-                    if(spriteNum == 5){spriteNum = 6;}
-                    else if(spriteNum == 6){spriteNum = 7;}
-                    else if(spriteNum == 7){spriteNum = 5;}
-                    spriteIndex = 0;
-                }
-                if(direction.equals("right")){
-                    if(spriteNum == 1){spriteNum = 2;}
-                    else if(spriteNum == 2){spriteNum = 3;}
-                    else if(spriteNum == 3){spriteNum = 1;}
-                    spriteIndex = 0;
-                }
-            }
-        }
     }
-    
+
     public void repaint(Graphics2D g2){
-        currentImage = null;
-        if(direction.equals("left")){
-            if(!kH.is_LeftPressed) {
-                currentImage = playerImages.get(4);
-                g2.drawImage(currentImage,posX,posY,width,height,null);
-            }
-            if(kH.is_LeftPressed){
-                if(spriteNum == 5){
-                    currentImage = playerImages.get(5);
-                    g2.drawImage(currentImage,posX,posY,width,height,null);
+        switch (direction){
+            case "right":
+                if(spriteNum == 0){
+                    currentImage = stand;
                 }
-                else if(spriteNum == 6){
-                    currentImage = playerImages.get(6);
-                    g2.drawImage(currentImage,posX,posY,width,height,null);
-                }
-                else if(spriteNum == 7){
-                    currentImage = playerImages.get(7);
-                    g2.drawImage(currentImage,posX,posY,width,height,null);
-                }
-            }
-        }
-        if(direction.equals("right")){
-            if(!kH.is_RightPressed) {
-                currentImage = playerImages.getFirst();
-                g2.drawImage(currentImage,posX,posY,width,height,null);
-            }
-            if(kH.is_RightPressed){
-                if(spriteNum == 1){
-                    currentImage = playerImages.get(1);
-                    g2.drawImage(currentImage,posX,posY,width,height,null);
+                else if(spriteNum == 1){
+                    currentImage = run1;
                 }
                 else if(spriteNum == 2){
-                    currentImage = playerImages.get(2);
-                    g2.drawImage(currentImage,posX,posY,width,height,null);
+                    currentImage = run2;
                 }
                 else if(spriteNum == 3){
-                    currentImage = playerImages.get(3);
-                    g2.drawImage(currentImage,posX,posY,width,height,null);
+                    currentImage = run3;
                 }
-            }
+                break;
+
+            case "left":
+                if(spriteNum == 4){
+                    currentImage = leftstand;
+                }
+                if(spriteNum == 5){
+                    currentImage = leftrun1;
+                }
+                else if(spriteNum == 6){
+                    currentImage = leftrun2;
+                }
+                else if(spriteNum == 7){
+                    currentImage = leftrun3;
+                }
+                break;
+
         }
-        
+        g2.drawImage(currentImage,posX,posY,width,height,null);
     }
 
 }
