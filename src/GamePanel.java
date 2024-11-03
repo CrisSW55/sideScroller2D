@@ -4,20 +4,22 @@ import java.awt.event.KeyListener;
 import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable{
+    int tile_Width = 48;
+    int tile_Height = 48;
     Thread gThread;
     KeyHandler kH;
     Player player;
     Color brightHorizon;
     TileManager tileMgr;
     public  GamePanel(){
-        kH = new KeyHandler();
-        player = new Player(50,350,16,16,4);
-        player.loadImage();
+        player = new Player(tile_Width,tile_Height*7,tile_Width,tile_Height,"right");
+        player.loadImages();
+        kH = player.kH;
         brightHorizon = new Color(240, 192, 180);
         setBackground(brightHorizon);
         tileMgr = new TileManager();
         tileMgr.load_TileImages();
-        tileMgr.readTileMap();
+        tileMgr.read_TileMap();
         //Allows the game panel to recognize the kH being used
         this.addKeyListener(kH);
         this.setFocusable(true);
@@ -46,7 +48,6 @@ public class GamePanel extends JPanel implements Runnable{
             one_Frame += deltaTime * fpsInterval;
             if(one_Frame >= 1){
                 update();
-                //System.out.println("Inside game thread!");
                 repaint();
                 one_Frame--;
             }
@@ -56,65 +57,25 @@ public class GamePanel extends JPanel implements Runnable{
         }
     }
 
-    //Handles any logic, such as entity positions
-    public void update() {
-            if(kH.is_RightPressed){
-                player.posX += player.speed;
-                player.direction = "right";
-                System.out.println("entity screenposX moving right: " + player.posX);
-            }
-        if(kH.is_LeftPressed){
-            player.posX -= player.speed;
-            System.out.println("entity screenposX moving left:  " + player.posX);
-        }
-        player.spriteIndex++;
-        if(player.spriteIndex>10){
-            if(player.spriteNum == 1){
-                player.spriteNum = 2;
-            }
-            else if(player.spriteNum == 2){
-                player.spriteNum = 3;
-            }
-            else if(player.spriteNum == 3){
-                player.spriteNum = 1;
-            }
-            player.spriteIndex = 0;
-        }
-    }
+    //Handles any logic, such as entity positions,directions
+    public void update() {player.update();}
 
     //Handles graphics painted on the game panel, such as the rectangle shaped entity
     @Override
     public void paintComponent (Graphics g) {
         super.paintComponent(g);
         Graphics2D g2= (Graphics2D) g;
-        //g2.setColor(Color.BLUE);
-        int tileWidth = 48; int tileHeight = 48;
+
         for(int i = 0; i<tileMgr.tileIndex.length;i++){
             for(int j = 0; j<12; j++){
-                g2.drawImage(tileMgr.tileImages.get(tileMgr.tileIndex[i][j]),j * tileWidth,i*tileHeight,48,48,null);
+                if(tileMgr.tiles.get(tileMgr.tileIndex[i][j]) != null){
+                    tileMgr.tiles.get(tileMgr.tileIndex[i][j]).set_Position(j * tile_Width,i*tile_Height);
+                    g2.drawImage(tileMgr.tiles.get(tileMgr.tileIndex[i][j]).img,j * tile_Width,i*tile_Height,tile_Width,tile_Height,null);
+                }
             }
         }
-        if(player.direction.equals("right") && !kH.is_RightPressed){
-            g2.drawImage(player.playerImages.get(0),player.posX, player.posY, player.width, player.height,null);
-        }
-        if(player.direction.equals("right") && kH.is_RightPressed){
-            if(player.spriteNum == 1){
-                g2.drawImage(player.playerImages.get(player.spriteNum),player.posX, player.posY, player.width, player.height,null);
-            }
-            if(player.spriteNum == 2){
-                g2.drawImage(player.playerImages.get(player.spriteNum),player.posX, player.posY, player.width, player.height,null);
-            }
-            if(player.spriteNum == 3){
-                g2.drawImage(player.playerImages.get(player.spriteNum),player.posX, player.posY, player.width, player.height,null);
-            }
-
-
-        }
-
-
-
+        player.repaint(g2);
         g2.dispose();
-
     }
 }
 

@@ -4,17 +4,17 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class TileManager {
-    ArrayList<BufferedImage> tileImages;
+    ArrayList<Tile> tiles;
     int [][] tileIndex = new int[10][12];
     public TileManager(){
-        tileImages = new ArrayList<>();
+        tiles = new ArrayList<>();
 
     }
 
-    public void readTileMap() {
+    public void read_TileMap() {
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new FileReader("res/tileMap1.txt"));
+            br = new BufferedReader(new FileReader("res/tileMap01.txt"));
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
             String regex = " ";
@@ -25,14 +25,14 @@ public class TileManager {
                 for(String s:myArray){
                     if(j < 12){
                         tileIndex [i][j] = Integer.parseInt(s);
-                        System.out.println("i: " + i + "j: " + j);
-                        System.out.println("TileIndex: " + tileIndex[i][j]);
+                        //System.out.println("i: " + i + "j: " + j);
+                        //System.out.println("TileIndex: " + tileIndex[i][j]);
                         j++;
                     }
                 }
 
                 sb.append(line);
-                System.out.println("Line: "+line);
+                //System.out.println("Line: "+line);
                 sb.append(System.lineSeparator());
                 //Rows below!
                 line = br.readLine();
@@ -43,7 +43,7 @@ public class TileManager {
                 j = 0;
             }
             String everything = sb.toString();
-            System.out.println(everything);
+            //System.out.println(everything);
             br.close();
 
         } catch (FileNotFoundException e) {
@@ -56,8 +56,13 @@ public class TileManager {
 
     public void load_TileImages() {
         try {
-            tileImages.add(ImageIO.read(getClass().getResourceAsStream("/tiles/grass_Tile.png")));
-            tileImages.add(ImageIO.read(getClass().getResourceAsStream("/tiles/dirt_Tile.png")));
+            Tile t1 = new Tile();
+            t1.img = ImageIO.read(getClass().getResourceAsStream("/tiles/dirt_Tile.png"));
+            Tile t2 = new Tile();
+            t2.img = ImageIO.read(getClass().getResourceAsStream("/tiles/grass_Tile.png"));
+            tiles.add(null);
+            tiles.add(t1);
+            tiles.add(t2);
         } catch (IOException e) {
             e.printStackTrace();
         }
