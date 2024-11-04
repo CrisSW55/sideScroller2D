@@ -38,6 +38,11 @@ public class Player extends Entity {
             playerImages.add(leftrun1);
             playerImages.add(leftrun2);
             playerImages.add(leftrun3);
+            //Player attack frames, spriteIndexes: 8 , 9
+            swordattack = ImageIO.read(getClass().getResourceAsStream("/entities/swordattack_Blueguy.png"));
+            leftswordattack = ImageIO.read(getClass().getResourceAsStream("/entities/leftswordattack_Blueguy.png"));
+            playerImages.add(swordattack);
+            playerImages.add(leftswordattack);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,6 +50,7 @@ public class Player extends Entity {
     }
 
     public void update(){
+        //Player sprite movements
         if (kH.is_RightPressed || kH.is_LeftPressed) {
             if (kH.is_LeftPressed) {direction = "left";posX -= speed;}
             if (kH.is_RightPressed) {direction = "right";posX += speed;}
@@ -61,11 +67,25 @@ public class Player extends Entity {
                 spriteIndex = 0;
             }
         }
+        //Player attacking
+        else if (kH.is_AttackPressed) {
+            if (direction.equals("right")) {
+                spriteNum = 8;
+            }
+            else if (direction.equals("left")) {
+                spriteNum = 9;
+            }
+        }
+
+        //Player standing
         else if(direction.equals("right")){
             // Handle right idle state
             spriteNum = 0; // Assuming 0 is for standing
         }
         else if(direction.equals("left")){
+            if (kH.is_AttackPressed) {
+                spriteNum = 9;
+            }
             // Handle left idle state
             spriteNum = 4; //Assuming 4 is for leftstanding
         }
@@ -87,6 +107,9 @@ public class Player extends Entity {
                 else if(spriteNum == 3){
                     currentImage = run3;
                 }
+                else if(spriteNum == 8){
+                    currentImage = swordattack;
+                }
                 break;
 
             case "left":
@@ -101,6 +124,9 @@ public class Player extends Entity {
                 }
                 else if(spriteNum == 7){
                     currentImage = leftrun3;
+                }
+                else if(spriteNum == 9){
+                    currentImage = leftswordattack;
                 }
                 break;
 

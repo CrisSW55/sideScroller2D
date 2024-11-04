@@ -9,11 +9,14 @@ public class GamePanel extends JPanel implements Runnable{
     Thread gThread;
     KeyHandler kH;
     Player player;
+    SwordItem swordItem;
     Color brightHorizon;
     TileManager tileMgr;
     public  GamePanel(){
         player = new Player(tile_Width,tile_Height*7,tile_Width,tile_Height,"right");
         player.loadImages();
+        swordItem = new SwordItem((tile_Width*10),(tile_Height*7)+(tile_Height/2),tile_Width/2,tile_Height/2);
+        swordItem.loadItemImages();
         kH = player.kH;
         brightHorizon = new Color(240, 192, 180);
         setBackground(brightHorizon);
@@ -75,6 +78,7 @@ public class GamePanel extends JPanel implements Runnable{
             }
         }
         player.repaint(g2);
+        swordItem.repaint(g2);
         g2.dispose();
     }
 }
