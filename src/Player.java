@@ -10,8 +10,10 @@ public class Player extends Entity {
     public int spriteIndex = 0;
     public int spriteNum = 1;
     KeyHandler kH;
+    boolean sword_Equipped = false;
     public Player(int x, int y, int w, int h,String init_Direction) {
         super(x, y, w, h,init_Direction);
+        this.setBounds(this.posX,this.posY,this.width,this.height);
         this.speed = 5;
         playerImages =  new ArrayList<BufferedImage>();
         this.gravity = 1/2;
@@ -48,6 +50,13 @@ public class Player extends Entity {
             e.printStackTrace();
         }
     }
+    public void player_ItemCollision(Item item) {
+        if (item.posX <= posX + (width / 2) && item.posX+ (width / 2)>= posX) {
+            sword_Equipped = true;
+            item.collision = true;
+        }
+
+    }
 
     public void update(){
         //Player sprite movements
@@ -68,7 +77,7 @@ public class Player extends Entity {
             }
         }
         //Player attacking
-        else if (kH.is_AttackPressed) {
+        else if (kH.is_AttackPressed && sword_Equipped) {
             if (direction.equals("right")) {
                 spriteNum = 8;
             }
@@ -89,7 +98,7 @@ public class Player extends Entity {
             // Handle left idle state
             spriteNum = 4; //Assuming 4 is for leftstanding
         }
-
+        System.out.println("Player's posX:" +posX + " posY:" +posY);
     }
 
     public void repaint(Graphics2D g2){

@@ -7,6 +7,7 @@ public class Entity extends Rectangle {
     int width;
     int height;
     public String direction;
+    boolean collision = false;
 
     BufferedImage stand,run1,run2,run3,leftstand,leftrun1,leftrun2,leftrun3,swordattack,leftswordattack;
     int gravity;

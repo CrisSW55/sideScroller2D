@@ -9,6 +9,7 @@ public class SwordItem extends Item{
         this.posY = posY;
         this.width = width;
         this.height = height;
+        this.setBounds(this.posX,this.posY,this.width,this.height);
     }
     public void loadItemImages(){
         try {
@@ -21,7 +22,7 @@ public class SwordItem extends Item{
     }
 
     public void repaint(Graphics2D g2){
-        g2.drawImage(img,posX,posY,width,height,null);
+        if(!collision){g2.drawImage(img,posX,posY,width,height,null);}
 
     }
 }

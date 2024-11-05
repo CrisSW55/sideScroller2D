@@ -13,9 +13,9 @@ public class GamePanel extends JPanel implements Runnable{
     Color brightHorizon;
     TileManager tileMgr;
     public  GamePanel(){
-        player = new Player(tile_Width,tile_Height*7,tile_Width,tile_Height,"right");
+        player = new Player(0,tile_Height*6,tile_Width*2,tile_Height*2,"right");
         player.loadImages();
-        swordItem = new SwordItem((tile_Width*10),(tile_Height*7)+(tile_Height/2),tile_Width/2,tile_Height/2);
+        swordItem = new SwordItem((tile_Width*10),((tile_Height*6)+tile_Height/2)+(tile_Height/2),tile_Width,tile_Height);
         swordItem.loadItemImages();
         kH = player.kH;
         brightHorizon = new Color(240, 192, 180);
@@ -61,7 +61,13 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     //Handles any logic, such as entity positions,directions
-    public void update() {player.update();}
+    public void update() {
+        player.update();
+        System.out.println("SwordItem's posX:" +swordItem.posX + " posY:" +swordItem.posY);
+        player.player_ItemCollision(swordItem);
+        System.out.println("Is player sword equipped: " + player.sword_Equipped);
+
+    }
 
     //Handles graphics painted on the game panel, such as the rectangle shaped entity
     @Override
@@ -70,7 +76,7 @@ public class GamePanel extends JPanel implements Runnable{
         Graphics2D g2= (Graphics2D) g;
 
         for(int i = 0; i<tileMgr.tileIndex.length;i++){
-            for(int j = 0; j<12; j++){
+            for(int j = 0; j<27; j++){
                 if(tileMgr.tiles.get(tileMgr.tileIndex[i][j]) != null){
                     tileMgr.tiles.get(tileMgr.tileIndex[i][j]).set_Position(j * tile_Width,i*tile_Height);
                     g2.drawImage(tileMgr.tiles.get(tileMgr.tileIndex[i][j]).img,j * tile_Width,i*tile_Height,tile_Width,tile_Height,null);

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class TileManager {
     ArrayList<Tile> tiles;
-    int [][] tileIndex = new int[10][12];
+    int [][] tileIndex = new int[15][27];
     public TileManager(){
         tiles = new ArrayList<>();
 
@@ -23,7 +23,7 @@ public class TileManager {
             int j = 0;
             while (line != null) {
                 for(String s:myArray){
-                    if(j < 12){
+                    if(j < 27){
                         tileIndex [i][j] = Integer.parseInt(s);
                         //System.out.println("i: " + i + "j: " + j);
                         //System.out.println("TileIndex: " + tileIndex[i][j]);
@@ -37,7 +37,7 @@ public class TileManager {
                 //Rows below!
                 line = br.readLine();
                 i++;
-                if(i < 10){
+                if(i < 15){
                     myArray = line.split(regex);
                 }
                 j = 0;

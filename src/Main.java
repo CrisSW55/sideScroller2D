@@ -13,8 +13,8 @@ public class Main extends JFrame{
         //System.out.println(monitor_Width); // 1280 pixels
         //System.out.println(monitor_Height); // 720 pixels
         //Position the window at the center of the monitor
-        double window_Width = 640;
-        double window_Height = 480;
+        double window_Width = monitor_Width; //Old window_Witdh = 640
+        double window_Height = monitor_Height; //Old window_Height = 480
         double center_winPosX = monitor_Width *.5 - (window_Width*.5);
         double center_winPosY = monitor_Height * .5 - (window_Height*.5);
         //System.out.println(center_winPosX); // 320 pixels
