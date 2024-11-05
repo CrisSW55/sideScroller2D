@@ -11,6 +11,7 @@ public class Player extends Entity {
     public int spriteNum = 1;
     KeyHandler kH;
     boolean sword_Equipped = false;
+    boolean sword_Hit = false;
     public Player(int x, int y, int w, int h,String init_Direction) {
         super(x, y, w, h,init_Direction);
         this.setBounds(this.posX,this.posY,this.width,this.height);
@@ -57,6 +58,13 @@ public class Player extends Entity {
         }
 
     }
+    public void player_MinionAttackCollision(Minion minion) {
+        if (minion.posX <= posX + (width / 2) && minion.posX+ (width / 2)>= posX && kH.is_AttackPressed && sword_Equipped) {
+            sword_Hit = true;
+            minion.collision = true;
+        }
+
+    }
 
     public void update(){
         //Player sprite movements
@@ -98,7 +106,6 @@ public class Player extends Entity {
             // Handle left idle state
             spriteNum = 4; //Assuming 4 is for leftstanding
         }
-        System.out.println("Player's posX:" +posX + " posY:" +posY);
     }
 
     public void repaint(Graphics2D g2){

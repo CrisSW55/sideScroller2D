@@ -9,12 +9,15 @@ public class GamePanel extends JPanel implements Runnable{
     Thread gThread;
     KeyHandler kH;
     Player player;
+    Minion minion1;
     SwordItem swordItem;
     Color brightHorizon;
     TileManager tileMgr;
     public  GamePanel(){
         player = new Player(0,tile_Height*6,tile_Width*2,tile_Height*2,"right");
         player.loadImages();
+        minion1 = new Minion(tile_Width*11,tile_Height*6,tile_Width*2,tile_Height*2,"right");
+        minion1.loadImages();
         swordItem = new SwordItem((tile_Width*10),((tile_Height*6)+tile_Height/2)+(tile_Height/2),tile_Width,tile_Height);
         swordItem.loadItemImages();
         kH = player.kH;
@@ -62,10 +65,10 @@ public class GamePanel extends JPanel implements Runnable{
 
     //Handles any logic, such as entity positions,directions
     public void update() {
-        player.update();
-        System.out.println("SwordItem's posX:" +swordItem.posX + " posY:" +swordItem.posY);
+        player.update(); minion1.update(this);
         player.player_ItemCollision(swordItem);
-        System.out.println("Is player sword equipped: " + player.sword_Equipped);
+        player.player_MinionAttackCollision(minion1);
+
 
     }
 
@@ -84,6 +87,7 @@ public class GamePanel extends JPanel implements Runnable{
             }
         }
         player.repaint(g2);
+        minion1.repaint(g2);
         swordItem.repaint(g2);
         g2.dispose();
     }
