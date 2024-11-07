@@ -46,16 +46,12 @@ public class Minion extends Entity{
     public void update(GamePanel gp){
         //Minion sprite movements
         if(direction.equals("right")){
-            if (posX >= init_posX+(gp.tile_Width*3)){
-                direction = "left";
-            }
+            if (posX >= init_posX+(gp.tile_Width*3)){direction = "left";}
             else if(posX < init_posX + (gp.tile_Width*3)){direction = "right";posX += speed;}
         }
 
         if(direction.equals("left")){
-            if (posX <= init_posX){
-                direction = "right";
-            }
+            if (posX <= init_posX){direction = "right";}
             else{direction = "left";posX -= speed;}
         }
             //spriteIndex is the times update get called in this case total 60 times

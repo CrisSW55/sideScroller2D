@@ -3,31 +3,17 @@ import java.awt.*;
 
 public class Main extends JFrame{
     public static void main(String[] args) {
-        //Dimension class will get the resolution of the monitor
-        //My monitor screenSize is set to
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double monitor_Width = screenSize.getWidth();
-        double monitor_Height = screenSize.getHeight();
-        //System.out.println(monitor_Width); // 1280 pixels
-        //System.out.println(monitor_Height); // 720 pixels
-        //Position the window at the center of the monitor
-        double window_Width = monitor_Width; //Old window_Witdh = 640
-        double window_Height = monitor_Height; //Old window_Height = 480
-        double center_winPosX = monitor_Width *.5 - (window_Width*.5);
-        double center_winPosY = monitor_Height * .5 - (window_Height*.5);
-        System.out.println(window_Width +" "+ window_Height);
         GamePanel gPanel = new GamePanel();
         gPanel.init_Thread();
-
+        double center_winPosX = gPanel.monitor_Width *.5 - (gPanel.screen_Width*.5);
+        double center_winPosY = gPanel.monitor_Height * .5 - (gPanel.screen_Height*.5);
         JFrame frame = new JFrame("sideScroller2D");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(gPanel);
         // Converted the double types to int, because parameters of
         // the method the int type
-        frame.setSize((int)window_Width,(int)window_Height);
+        frame.setSize((int)gPanel.screen_Width,(int)gPanel.screen_Height);
         frame.setLocation((int)center_winPosX,(int)center_winPosY);
         frame.setVisible(true);
-
-
     }
 }

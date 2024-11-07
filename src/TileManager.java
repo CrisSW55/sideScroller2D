@@ -5,16 +5,20 @@ import java.util.ArrayList;
 
 public class TileManager {
     ArrayList<Tile> tiles;
-    int [][] tileIndex = new int[15][27];
+    int total_Cols = 267;
+    int total_Rows = 14;
+    //Current tileIndex from the levelMap.txt file using columns and rows
+    int [][] tileIndex = new int[total_Rows][total_Cols];
     public TileManager(){
         tiles = new ArrayList<>();
 
     }
 
+
     public void read_TileMap() {
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new FileReader("res/tileMap01.txt"));
+            br = new BufferedReader(new FileReader("res/level1_Map.txt"));
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
             String regex = " ";
@@ -23,7 +27,7 @@ public class TileManager {
             int j = 0;
             while (line != null) {
                 for(String s:myArray){
-                    if(j < 27){
+                    if(j < total_Cols){
                         tileIndex [i][j] = Integer.parseInt(s);
                         //System.out.println("i: " + i + "j: " + j);
                         //System.out.println("TileIndex: " + tileIndex[i][j]);
@@ -37,7 +41,7 @@ public class TileManager {
                 //Rows below!
                 line = br.readLine();
                 i++;
-                if(i < 15){
+                if(i < total_Rows){
                     myArray = line.split(regex);
                 }
                 j = 0;

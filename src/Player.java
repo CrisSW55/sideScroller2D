@@ -10,13 +10,9 @@ public class Player extends Entity {
     public int spriteIndex = 0;
     public int spriteNum = 1;
     KeyHandler kH;
+    MouseHandler mH;
     boolean sword_Equipped = false;
     boolean sword_Hit = false;
-    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    double monitor_Width = screenSize.getWidth();
-    double monitor_Height = screenSize.getHeight();
-    double screen_Width = monitor_Width; //Old window_Witdh = 640
-    double screen_Height = monitor_Height;
     public Player(int x, int y, int w, int h,String init_Direction) {
         super(x, y, w, h,init_Direction);
         this.setBounds(this.posX,this.posY,this.width,this.height);
@@ -24,6 +20,7 @@ public class Player extends Entity {
         playerImages =  new ArrayList<BufferedImage>();
         this.gravity = 1/2;
         kH = new KeyHandler();
+        mH = new MouseHandler();
     }
 
     public void loadImages(){
@@ -56,25 +53,24 @@ public class Player extends Entity {
             e.printStackTrace();
         }
     }
-    public void player_ItemCollision(Item item) {
-        if (item.posX <= posX + (width / 2) && item.posX+ (width / 2)>= posX) {
+    public void collisions(GamePanel gp){
+        //SwordItem and Player collision, equipping sword
+        if (gp.swordItem.posX <= posX + (width / 2) && gp.swordItem.posX+ (width / 2)>= posX) {
             sword_Equipped = true;
-            item.collision = true;
+            gp.swordItem.collision = true;
         }
-
-    }
-    public void player_MinionAttackCollision(Minion minion) {
-        if (minion.posX <= posX + (width*.75) && minion.posX+ (width*.75)>= posX && kH.is_AttackPressed && sword_Equipped) {
+        //Minion and Player collision, attacked minion collides with player sword
+        if (gp.minion1.posX <= posX + (width*.75) && gp.minion1.posX+ (width*.75)>= posX && mH.is_AttackPressed && sword_Equipped) {
             sword_Hit = true;
-            minion.collision = true;
+            gp.minion1.collision = true;
         }
-
     }
-
-    public void update(){
+    public void update(GamePanel gp){
         //Player sprite movements
         if (kH.is_RightPressed || kH.is_LeftPressed) {
-            if (kH.is_LeftPressed) {direction = "left";posX -= speed;}
+            if (kH.is_LeftPressed) {direction = "left";
+                posX = (gp.screen_Width/2)-(gp.tile_Width*2) + speed;
+            }
             if (kH.is_RightPressed) {direction = "right";posX += speed;}
             //spriteIndex is the times update get called in this case total 60 times
 
@@ -90,7 +86,7 @@ public class Player extends Entity {
             }
         }
         //Player attacking
-        else if (kH.is_AttackPressed && sword_Equipped) {
+        else if (mH.is_AttackPressed && sword_Equipped) {
             if (direction.equals("right")) {
                 spriteNum = 8;
             }
@@ -105,12 +101,13 @@ public class Player extends Entity {
             spriteNum = 0; // Assuming 0 is for standing
         }
         else if(direction.equals("left")){
-            if (kH.is_AttackPressed) {
+            if (mH.is_AttackPressed) {
                 spriteNum = 9;
             }
             // Handle left idle state
             spriteNum = 4; //Assuming 4 is for leftstanding
         }
+
     }
 
     public void repaint(Graphics2D g2){
