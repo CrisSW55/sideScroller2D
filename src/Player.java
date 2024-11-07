@@ -12,6 +12,11 @@ public class Player extends Entity {
     KeyHandler kH;
     boolean sword_Equipped = false;
     boolean sword_Hit = false;
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    double monitor_Width = screenSize.getWidth();
+    double monitor_Height = screenSize.getHeight();
+    double screen_Width = monitor_Width; //Old window_Witdh = 640
+    double screen_Height = monitor_Height;
     public Player(int x, int y, int w, int h,String init_Direction) {
         super(x, y, w, h,init_Direction);
         this.setBounds(this.posX,this.posY,this.width,this.height);
@@ -59,7 +64,7 @@ public class Player extends Entity {
 
     }
     public void player_MinionAttackCollision(Minion minion) {
-        if (minion.posX <= posX + (width / 2) && minion.posX+ (width / 2)>= posX && kH.is_AttackPressed && sword_Equipped) {
+        if (minion.posX <= posX + (width*.75) && minion.posX+ (width*.75)>= posX && kH.is_AttackPressed && sword_Equipped) {
             sword_Hit = true;
             minion.collision = true;
         }
