@@ -9,13 +9,20 @@ public class Player extends Entity {
     BufferedImage currentImage;
     public int spriteIndex = 0;
     public int spriteNum = 1;
+
+    GamePanel gp;
     KeyHandler kH;
     MouseHandler mH;
     boolean sword_Equipped = false;
     boolean sword_Hit = false;
-    public Player(int x, int y, int w, int h,String init_Direction) {
+    public final int screenX;
+    public final int screenY;
+    public Player(int x, int y, int w, int h,String init_Direction,GamePanel gp) {
         super(x, y, w, h,init_Direction);
-        this.setBounds(this.posX,this.posY,this.width,this.height);
+        this.screenX = gp.screen_Width/2;
+        this.screenY = gp.screen_Height/2;
+        this.gp = gp;
+        //this.setBounds(this.pos_LevelX,this.pos_LevelY,this.width,this.height);
         this.speed = 5;
         playerImages =  new ArrayList<BufferedImage>();
         this.gravity = 1/2;
@@ -53,25 +60,25 @@ public class Player extends Entity {
             e.printStackTrace();
         }
     }
-    public void collisions(GamePanel gp){
+    public void collisions(){
         //SwordItem and Player collision, equipping sword
-        if (gp.swordItem.posX <= posX + (width / 2) && gp.swordItem.posX+ (width / 2)>= posX) {
+        if (gp.swordItem.pos_LevelX <= pos_LevelX + (width / 2) && gp.swordItem.pos_LevelX+ (width / 2)>= pos_LevelX) {
             sword_Equipped = true;
             gp.swordItem.collision = true;
         }
         //Minion and Player collision, attacked minion collides with player sword
-        if (gp.minion1.posX <= posX + (width*.75) && gp.minion1.posX+ (width*.75)>= posX && mH.is_AttackPressed && sword_Equipped) {
+        if (gp.minion1.pos_LevelX <= pos_LevelX + (width*.75) && gp.minion1.pos_LevelX+ (width*.75)>= pos_LevelX && mH.is_AttackPressed && sword_Equipped) {
             sword_Hit = true;
             gp.minion1.collision = true;
         }
     }
-    public void update(GamePanel gp){
+    public void update(){
         //Player sprite movements
         if (kH.is_RightPressed || kH.is_LeftPressed) {
             if (kH.is_LeftPressed) {direction = "left";
-                posX = (gp.screen_Width/2)-(gp.tile_Width*2) + speed;
+                pos_LevelX -= speed;
             }
-            if (kH.is_RightPressed) {direction = "right";posX += speed;}
+            if (kH.is_RightPressed) {direction = "right";pos_LevelX += speed;}
             //spriteIndex is the times update get called in this case total 60 times
 
             spriteIndex++;
@@ -149,7 +156,7 @@ public class Player extends Entity {
                 break;
 
         }
-        g2.drawImage(currentImage,posX,posY,width,height,null);
+        g2.drawImage(currentImage,screenX,screenY,width,height,null);
     }
 
 }

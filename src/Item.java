@@ -2,8 +2,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Item extends Rectangle {
-    int posX;
-    int posY;
+    int pos_LevelX;
+    int pos_LevelY;
     int width;
     int height;
     BufferedImage img;

@@ -2,8 +2,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Entity extends Rectangle {
-    int posX;
-    int posY;
+    int pos_LevelX;
+    int pos_LevelY;
     int width;
     int height;
     public String direction;
@@ -15,8 +15,8 @@ public class Entity extends Rectangle {
 
 
     public Entity(int x,int y, int w, int h,String direction){
-        this.posX = x;
-        this.posY = y;
+        this.pos_LevelX = x;
+        this.pos_LevelY = y;
         this.width = w;
         this.height = h;
         this.direction = direction;

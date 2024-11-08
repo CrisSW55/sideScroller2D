@@ -1,17 +1,18 @@
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 
 public class TileManager {
+    GamePanel gp;
     ArrayList<Tile> tiles;
-    int total_Cols = 267;
-    int total_Rows = 14;
     //Current tileIndex from the levelMap.txt file using columns and rows
-    int [][] tileIndex = new int[total_Rows][total_Cols];
-    public TileManager(){
+    int [][] tileIndex;
+    public TileManager(GamePanel gp){
+        this.gp = gp;
         tiles = new ArrayList<>();
-
+        tileIndex = new int[gp.totalLevelRow][gp.totalLevelCol];
     }
 
 
@@ -23,15 +24,15 @@ public class TileManager {
             String line = br.readLine();
             String regex = " ";
             String[] myArray = line.split(regex);
-            int i = 0;
-            int j = 0;
+            int row= 0;
+            int col = 0;
             while (line != null) {
                 for(String s:myArray){
-                    if(j < total_Cols){
-                        tileIndex [i][j] = Integer.parseInt(s);
-                        //System.out.println("i: " + i + "j: " + j);
-                        //System.out.println("TileIndex: " + tileIndex[i][j]);
-                        j++;
+                    if(col < gp.totalLevelCol){
+                        tileIndex [row][col] = Integer.parseInt(s);
+                        //System.out.println("i: " + row+ "col: " + col);
+                        //System.out.println("TileIndex: " + tileIndex[i][col]);
+                        col++;
                     }
                 }
 
@@ -40,11 +41,11 @@ public class TileManager {
                 sb.append(System.lineSeparator());
                 //Rows below!
                 line = br.readLine();
-                i++;
-                if(i < total_Rows){
+                row++;
+                if(row< gp.totalLevelRow){
                     myArray = line.split(regex);
                 }
-                j = 0;
+                col = 0;
             }
             String everything = sb.toString();
             //System.out.println(everything);
@@ -69,6 +70,22 @@ public class TileManager {
             tiles.add(t2);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+    
+    public void repaint(Graphics2D g2){
+        for(int row = 0; row<gp.totalLevelRow;row++){
+            for(int col = 0; col<gp.totalLevelCol; col++){
+                int levelX = col * gp.tile_Width;
+                int levelY = row * gp.tile_Height;
+                int screenX = levelX - gp.player.pos_LevelX + gp.player.screenX;
+                int screenY = levelY - gp.player.pos_LevelY + gp.player.screenY;
+
+                if(tiles.get(tileIndex[row][col]) != null){
+                    tiles.get(tileIndex[row][col]).set_Position(col * gp.tile_Width,row*gp.tile_Height);
+                    g2.drawImage(tiles.get(tileIndex[row][col]).img,screenX,screenY,gp.tile_Width,gp.tile_Height,null);
+                }
+            }
         }
     }
     }

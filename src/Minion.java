@@ -9,11 +9,14 @@ public class Minion extends Entity{
     BufferedImage currentImage;
     public int spriteIndex = 0;
     public int spriteNum = 1;
-    public int init_posX;
-    public Minion(int x, int y, int w, int h,String init_Direction) {
+    public int init_pos_LevelX;
+
+    GamePanel gp;
+    public Minion(int x, int y, int w, int h,String init_Direction,GamePanel gp) {
         super(x, y, w, h,init_Direction);
-        init_posX = x;
-        this.setBounds(this.posX,this.posY,this.width,this.height);
+        this.gp = gp;
+        init_pos_LevelX = x;
+        this.setBounds(this.pos_LevelX,this.pos_LevelY,this.width,this.height);
         this.speed = 2;
         minionImages =  new ArrayList<BufferedImage>();
         this.gravity = 1/2;
@@ -43,16 +46,16 @@ public class Minion extends Entity{
             e.printStackTrace();
         }
     }
-    public void update(GamePanel gp){
+    public void update(){
         //Minion sprite movements
         if(direction.equals("right")){
-            if (posX >= init_posX+(gp.tile_Width*3)){direction = "left";}
-            else if(posX < init_posX + (gp.tile_Width*3)){direction = "right";posX += speed;}
+            if (pos_LevelX >= init_pos_LevelX+(gp.tile_Width*3)){direction = "left";}
+            else if(pos_LevelX < init_pos_LevelX + (gp.tile_Width*3)){direction = "right";pos_LevelX += speed;}
         }
 
         if(direction.equals("left")){
-            if (posX <= init_posX){direction = "right";}
-            else{direction = "left";posX -= speed;}
+            if (pos_LevelX <= init_pos_LevelX){direction = "right";}
+            else{direction = "left";pos_LevelX -= speed;}
         }
             //spriteIndex is the times update get called in this case total 60 times
             spriteIndex++;
@@ -110,7 +113,7 @@ public class Minion extends Entity{
 
         }
 
-        if(!collision){g2.drawImage(currentImage,posX,posY,width,height,null);}
+        if(!collision){g2.drawImage(currentImage,pos_LevelX,pos_LevelY,width,height,null);}
 
 
 
