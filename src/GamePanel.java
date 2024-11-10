@@ -43,7 +43,7 @@ public class GamePanel extends JPanel implements Runnable{
         player.loadImages();
         minion1 = new Minion(tile_Width*22,tile_Height*8,tile_Width*2,tile_Height*2,"right",this);
         minion1.loadImages();
-        swordItem = new SwordItem((tile_Width*10),((tile_Height*8)+tile_Height/2)+(tile_Height/2),tile_Width,tile_Height);
+        swordItem = new SwordItem((tile_Width*10),((tile_Height*8)+tile_Height/2)+(tile_Height/2),tile_Width,tile_Height,this);
         swordItem.loadItemImages();
         kH = player.kH;
         mH = player.mH;

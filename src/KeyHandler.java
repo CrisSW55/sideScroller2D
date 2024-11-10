@@ -4,6 +4,7 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener {
     public boolean is_RightPressed;
     public boolean is_LeftPressed;
+    public boolean is_AttackPressed = false;
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -18,6 +19,9 @@ public class KeyHandler implements KeyListener {
         if(key == KeyEvent.VK_A){
             is_LeftPressed = true;
         }
+        if(key == KeyEvent.VK_F){
+            is_AttackPressed = true;
+        }
     }
 
     @Override
@@ -27,6 +31,9 @@ public class KeyHandler implements KeyListener {
         }
         if(is_LeftPressed == true){
             is_LeftPressed = false;
+        }
+        if(is_AttackPressed == true){
+            is_AttackPressed = false;
         }
     }
 }

@@ -80,6 +80,8 @@ public class TileManager {
                 int levelY = row * gp.tile_Height;
                 int screenX = levelX - gp.player.pos_LevelX + gp.player.screenX;
                 int screenY = levelY - gp.player.pos_LevelY + gp.player.screenY;
+                //Add render efficiency bounds only rendering the current screen!
+                //      Write code here!    //
 
                 if(tiles.get(tileIndex[row][col]) != null){
                     tiles.get(tileIndex[row][col]).set_Position(col * gp.tile_Width,row*gp.tile_Height);

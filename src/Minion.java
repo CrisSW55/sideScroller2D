@@ -10,7 +10,8 @@ public class Minion extends Entity{
     public int spriteIndex = 0;
     public int spriteNum = 1;
     public int init_pos_LevelX;
-
+    public final int screenX = 0;
+    public final int screenY = 0;
     GamePanel gp;
     public Minion(int x, int y, int w, int h,String init_Direction,GamePanel gp) {
         super(x, y, w, h,init_Direction);
@@ -113,7 +114,9 @@ public class Minion extends Entity{
 
         }
 
-        if(!collision){g2.drawImage(currentImage,pos_LevelX,pos_LevelY,width,height,null);}
+        int screenX = pos_LevelX - gp.player.pos_LevelX + gp.player.screenX;
+        int screenY = pos_LevelY - gp.player.pos_LevelY + gp.player.screenY;
+        if(!collision){g2.drawImage(currentImage,screenX,screenY,width,height,null);}
 
 
 
