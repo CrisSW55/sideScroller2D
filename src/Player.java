@@ -67,7 +67,7 @@ public class Player extends Entity {
             gp.swordItem.collision = true;
         }
         //Minion and Player collision, attacked minion collides with player sword
-        if (gp.minion1.pos_LevelX <= pos_LevelX + (width*.75) && gp.minion1.pos_LevelX+ (width*.75)>= pos_LevelX && kH.is_AttackPressed && sword_Equipped) {
+        if (gp.minion1.pos_LevelX <= pos_LevelX + (width*.75) && gp.minion1.pos_LevelX+ (width*.75)>= pos_LevelX && mH.is_AttackPressed && sword_Equipped) {
             sword_Hit = true;
             gp.minion1.collision = true;
         }
@@ -91,7 +91,7 @@ public class Player extends Entity {
             }
         }
         //Player attacking
-        else if (kH.is_AttackPressed && sword_Equipped) {
+        else if (mH.is_AttackPressed && sword_Equipped) {
             if (direction.equals("right")) {
                 spriteNum = 8;
             }
@@ -106,7 +106,7 @@ public class Player extends Entity {
             spriteNum = 0; // Assuming 0 is for standing
         }
         else if(direction.equals("left")){
-            if (kH.is_AttackPressed) {
+            if (mH.is_AttackPressed) {
                 spriteNum = 9;
             }
             // Handle left idle state

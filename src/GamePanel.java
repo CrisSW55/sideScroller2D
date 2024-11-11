@@ -51,6 +51,7 @@ public class GamePanel extends JPanel implements Runnable{
         setBackground(brightHorizon);
         //Allows the game panel to recognize the kH being used
         this.addKeyListener(kH);
+        this.addMouseListener(mH);
         this.setFocusable(true);
 
     }
