@@ -71,6 +71,14 @@ public class Player extends Entity {
             sword_Hit = true;
             gp.minion1.collision = true;
         }
+        if (gp.minion2.pos_LevelX <= pos_LevelX + (width*.75) && gp.minion2.pos_LevelX+ (width*.75)>= pos_LevelX && mH.is_AttackPressed && sword_Equipped) {
+            sword_Hit = true;
+            gp.minion2.collision = true;
+        }
+        if (gp.minion3.pos_LevelX <= pos_LevelX + (width*.75) && gp.minion3.pos_LevelX+ (width*.75)>= pos_LevelX && mH.is_AttackPressed && sword_Equipped) {
+            sword_Hit = true;
+            gp.minion3.collision = true;
+        }
     }
     public void update(){
         //Player sprite movements

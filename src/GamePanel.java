@@ -22,8 +22,8 @@ public class GamePanel extends JPanel implements Runnable{
     //Level variables
     public int levelX = 0;
     public int levelY = 0;
-    public int totalLevelCol = 267;
-    public int totalLevelRow = 14;
+    public int totalLevelCol = 80;
+    public int totalLevelRow = 16;
     public int level_Width = tile_Width * totalLevelCol;
     public int level_Height = tile_Height * totalLevelRow;
 
@@ -31,7 +31,7 @@ public class GamePanel extends JPanel implements Runnable{
     KeyHandler kH;
     MouseHandler mH;
     Player player;
-    Minion minion1;
+    Minion minion1, minion2,minion3;
     SwordItem swordItem;
     Color brightHorizon;
     TileManager tileMgr;
@@ -39,11 +39,16 @@ public class GamePanel extends JPanel implements Runnable{
         tileMgr = new TileManager(this);
         tileMgr.load_TileImages();
         tileMgr.read_TileMap();
-        player = new Player(tile_Width*13,tile_Height*8,tile_Width*2,tile_Height*2,"right",this);
+        player = new Player(tile_Width*17,tile_Height*8,tile_Width*2,tile_Height*2,"right",this);
         player.loadImages();
-        minion1 = new Minion(tile_Width*22,tile_Height*8,tile_Width*2,tile_Height*2,"right",this);
+        minion1 = new Minion(tile_Width*60,tile_Height*8,tile_Width*2,tile_Height*2,"right",this);
         minion1.loadImages();
-        swordItem = new SwordItem((tile_Width*10),((tile_Height*8)+tile_Height/2)+(tile_Height/2),tile_Width,tile_Height,this);
+        minion2 = new Minion(tile_Width*23,tile_Height*12,tile_Width*2,tile_Height*2,"right",this);
+        minion2.loadImages();
+        minion3 = new Minion(tile_Width*35,tile_Height*12,tile_Width*2,tile_Height*2,"right",this);
+        minion3.loadImages();
+
+        swordItem = new SwordItem((tile_Width*77),((tile_Height*8)+tile_Height/2)+(tile_Height/2),tile_Width,tile_Height,this);
         swordItem.loadItemImages();
         kH = player.kH;
         mH = player.mH;
@@ -89,6 +94,8 @@ public class GamePanel extends JPanel implements Runnable{
     public void update() {
         player.update();
         minion1.update();
+        minion2.update();
+        minion3.update();
         player.collisions();
     }
 
@@ -100,6 +107,8 @@ public class GamePanel extends JPanel implements Runnable{
         tileMgr.repaint(g2);
         player.repaint(g2);
         minion1.repaint(g2);
+        minion2.repaint(g2);
+        minion3.repaint(g2);
         swordItem.repaint(g2);
         g2.dispose();
     }
