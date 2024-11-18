@@ -36,10 +36,7 @@ public class GamePanel extends JPanel implements Runnable{
     Color brightHorizon;
     TileManager tileMgr;
     public  GamePanel(){
-        tileMgr = new TileManager(this);
-        tileMgr.load_TileImages();
-        tileMgr.read_TileMap();
-        player = new Player(tile_Width*17,tile_Height*8,tile_Width*2,tile_Height*2,"right",this);
+        player = new Player(tile_Width,tile_Height*3,tile_Width*2,tile_Height*2,"right",this);
         player.loadImages();
         minion1 = new Minion(tile_Width*60,tile_Height*8,tile_Width*2,tile_Height*2,"right",this);
         minion1.loadImages();
@@ -47,9 +44,12 @@ public class GamePanel extends JPanel implements Runnable{
         minion2.loadImages();
         minion3 = new Minion(tile_Width*35,tile_Height*12,tile_Width*2,tile_Height*2,"right",this);
         minion3.loadImages();
-
-        swordItem = new SwordItem((tile_Width*77),((tile_Height*8)+tile_Height/2)+(tile_Height/2),tile_Width,tile_Height,this);
+        //initial position tile_Width*77
+        swordItem = new SwordItem((tile_Width*5),((tile_Height*8)+tile_Height/2)+(tile_Height/2),tile_Width,tile_Height,this);
         swordItem.loadItemImages();
+        tileMgr = new TileManager(this);
+        tileMgr.load_TileImages();
+        tileMgr.read_TileMap();
         kH = player.kH;
         mH = player.mH;
         brightHorizon = new Color(240, 192, 180);

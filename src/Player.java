@@ -5,16 +5,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Player extends Entity {
+    //Player width and height is 96 pixels
     ArrayList<BufferedImage> playerImages;
     BufferedImage currentImage;
     public int spriteIndex = 0;
     public int spriteNum = 1;
+
 
     GamePanel gp;
     KeyHandler kH;
     MouseHandler mH;
     boolean sword_Equipped = false;
     boolean sword_Hit = false;
+    boolean player_FeetTileCollision = false;
     public final int screenX;
     public final int screenY;
     public Player(int x, int y, int w, int h,String init_Direction,GamePanel gp) {
@@ -25,7 +28,7 @@ public class Player extends Entity {
         //this.setBounds(this.pos_LevelX,this.pos_LevelY,this.width,this.height);
         this.speed = 5;
         playerImages =  new ArrayList<BufferedImage>();
-        this.gravity = 1/2;
+        this.gravity = 2;
         kH = new KeyHandler();
         mH = new MouseHandler();
     }
@@ -61,30 +64,69 @@ public class Player extends Entity {
         }
     }
     public void collisions(){
+        //Player width = 96 pixels and height = 96 pixels
+
+        //Tile and Player collision
+        for(int row = 0; row<gp.totalLevelRow;row++){
+            for(int col = 0; col<gp.totalLevelCol; col++){
+                int levelX = col * gp.tile_Width;
+                int levelY = row * gp.tile_Height;
+                int screenX = levelX - pos_LevelX + this.screenX;
+                int screenY = levelY - pos_LevelY + this.screenY;
+                if(gp.tileMgr.tiles.get(gp.tileMgr.tileIndex[row][col]) != null){
+                    if (screenY <= pos_LevelY + (height+height/2)) {
+                        player_FeetTileCollision = true;
+                        gp.tileMgr.tiles.get(gp.tileMgr.tileIndex[row][col]).collision = true;
+//                        System.out.println("playerTileCollision inside first if statement is true of inner column loop: " + player_FeetTileCollision);
+                        System.out.println("player position Y: " + pos_LevelY);
+                        System.out.println("current tile position Y " + screenY +  " " + row +  " "+ col);
+//                        System.out.println("player position Y: " + pos_LevelY);
+//                        System.out.println("current tile position Y " + screenY +  " " + row +  " "+ col);
+                        break;
+
+                    }
+                    }
+
+
+            }
+        }
+
         //SwordItem and Player collision, equipping sword
-        if (gp.swordItem.pos_LevelX <= pos_LevelX + (width / 2) && gp.swordItem.pos_LevelX+ (width / 2)>= pos_LevelX) {
+        if (gp.swordItem.pos_LevelX <= pos_LevelX + (width / 2) && gp.swordItem.pos_LevelX+ (width / 2)>= pos_LevelX &&
+                gp.swordItem.pos_LevelY <= pos_LevelY + (height) && gp.swordItem.pos_LevelY+ (height/2)>= pos_LevelY) {
             sword_Equipped = true;
             gp.swordItem.collision = true;
         }
         //Minion and Player collision, attacked minion collides with player sword
-        if (gp.minion1.pos_LevelX <= pos_LevelX + (width*.75) && gp.minion1.pos_LevelX+ (width*.75)>= pos_LevelX && mH.is_AttackPressed && sword_Equipped) {
+        if (gp.minion1.pos_LevelX <= pos_LevelX + (width*.75) && gp.minion1.pos_LevelX+ (width*.75)>= pos_LevelX && mH.is_AttackPressed && sword_Equipped &&
+        gp.minion1.pos_LevelY <= pos_LevelY + (height) && gp.minion1.pos_LevelY+ (height*.75)>= pos_LevelY) {
             sword_Hit = true;
             gp.minion1.collision = true;
         }
-        if (gp.minion2.pos_LevelX <= pos_LevelX + (width*.75) && gp.minion2.pos_LevelX+ (width*.75)>= pos_LevelX && mH.is_AttackPressed && sword_Equipped) {
+        if (gp.minion2.pos_LevelX <= pos_LevelX + (width*.75) && gp.minion2.pos_LevelX+ (width*.75)>= pos_LevelX && mH.is_AttackPressed && sword_Equipped &&
+                gp.minion2.pos_LevelY <= pos_LevelY + (height) && gp.minion2.pos_LevelY+ (height*.75)>= pos_LevelY) {
             sword_Hit = true;
             gp.minion2.collision = true;
         }
-        if (gp.minion3.pos_LevelX <= pos_LevelX + (width*.75) && gp.minion3.pos_LevelX+ (width*.75)>= pos_LevelX && mH.is_AttackPressed && sword_Equipped) {
+        if (gp.minion3.pos_LevelX <= pos_LevelX + (width*.75) && gp.minion3.pos_LevelX+ (width*.75)>= pos_LevelX && mH.is_AttackPressed && sword_Equipped &&
+                gp.minion3.pos_LevelY <= pos_LevelY + (height) && gp.minion3.pos_LevelY+ (height*.75)>= pos_LevelY) {
             sword_Hit = true;
             gp.minion3.collision = true;
         }
     }
     public void update(){
+        //Gravity on player, player and tile collision
+        if (!player_FeetTileCollision) {
+            pos_LevelY += gravity;
+        }
+
+
         //Player sprite movements
-        if (kH.is_RightPressed || kH.is_LeftPressed) {
+        if (kH.is_RightPressed || kH.is_LeftPressed || kH.is_UpPressed || kH.is_DownPressed) {
             if (kH.is_LeftPressed) {direction = "left";pos_LevelX -= speed;}
             if (kH.is_RightPressed) {direction = "right";pos_LevelX += speed;}
+            if (kH.is_UpPressed) {direction = "up";pos_LevelY -= speed;}
+            if (kH.is_DownPressed) {direction = "down";pos_LevelY += speed;}
             //spriteIndex is the times update get called in this case total 60 times
 
             spriteIndex++;
@@ -107,6 +149,7 @@ public class Player extends Entity {
                 spriteNum = 9;
             }
         }
+
 
         //Player standing
         else if(direction.equals("right")){
