@@ -18,8 +18,7 @@ public class Player extends Entity {
     boolean sword_Equipped = false;
     boolean sword_Hit = false;
     boolean player_FeetTileCollision = false;
-    boolean player_LeftMovingUp = false;
-    boolean player_RightMovingUp = false;
+    boolean player_MovingUp = false;
     public final int screenX;
     public final int screenY;
     final int init_pos_LevelY = pos_LevelY;
@@ -82,12 +81,19 @@ public class Player extends Entity {
                         player_FeetTileCollision = true;
                         gp.tileMgr.tiles.get(gp.tileMgr.tileIndex[row][col]).collision = true;
 
-                        System.out.println("player position Y: " + pos_LevelY);
-                        System.out.println("current tile position Y: " + screenY +  "col: " + row +  " row: "+ col);
+                        System.out.println("player position X: "+ pos_LevelX);
+                        System.out.println("player position Y: "+ pos_LevelY);
+
+                        System.out.println("current tile position X: " + screenX);
+                        System.out.println("current tile position Y: " + screenY);
+                        System.out.println("row: " + row + " " + "col: "+ col);
+
+
 
                         break;
 
                     }
+                    gp.tileMgr.tiles.get(gp.tileMgr.tileIndex[row][col]).collision = false;
                     }
 
 
@@ -119,17 +125,6 @@ public class Player extends Entity {
     }
     public void update(){
 
-        //Gravity on player, player and tile collision
-        // Need to jumping bug jumps again after jumping once
-        if (!player_FeetTileCollision) {pos_LevelY += speed;}
-        else if(player_LeftMovingUp){
-            pos_LevelY -= speed;
-            if( pos_LevelY <= heightJump){player_FeetTileCollision = false; player_LeftMovingUp = false;}
-        }
-        else if(player_RightMovingUp){
-            pos_LevelY -= speed;
-            if( pos_LevelY <= heightJump){player_FeetTileCollision = false; player_RightMovingUp = false;}
-        }
         //Player sprite horizontal movements
         // (kH.is_UpPressed && kH.is_LeftPressed) || (kH.is_UpPressed && kH.is_RightPressed)
         if ( kH.is_RightPressed || kH.is_LeftPressed || kH.is_DownPressed || kH.is_UpPressed)  {
@@ -150,24 +145,43 @@ public class Player extends Entity {
                 }
             }
 
+            //Gravity on player, player and tile collision
+            // Need to jumping bug jumps again after jumping once
+                if (!player_FeetTileCollision && pos_LevelY <= heightJump && player_MovingUp) {
+                    pos_LevelY += speed;
+                    if(pos_LevelY > heightJump){player_MovingUp = false;}
+
+                    System.out.println("Player y position: gravity " + pos_LevelY);
+//                    player_MovingUp = true;
+//                    player_MovingUp = false;
+                }
 
                 //Diagonal movements
-                else if (kH.is_UpPressed  && kH.is_LeftPressed && !kH.is_RightPressed &&  !mH.is_AttackPressed && direction.equals("left")) {
-                   pos_LevelX -= speed;
-                   player_LeftMovingUp = true;
-                }
-                else if (kH.is_UpPressed  && kH.is_RightPressed && !kH.is_LeftPressed && !mH.is_AttackPressed && direction.equals("right")) {
-                   pos_LevelX += speed;
-                   player_RightMovingUp = true;
-                }
+
+//                else if (kH.is_UpPressed  && kH.is_RightPressed && !kH.is_LeftPressed && !mH.is_AttackPressed) {
+//                   pos_LevelX += speed;
+//                   player_MovingUp = true;
+//                   if(player_MovingUp && pos_LevelY > heightJump){
+//                        pos_LevelY -= speed;
+//                       player_FeetTileCollision = false; player_MovingUp = false;
+//                   }
+//                }
+//                else if (kH.is_UpPressed  && kH.is_LeftPressed && !kH.is_RightPressed  && !mH.is_AttackPressed) {
+//                pos_LevelX -= speed;
+//                player_MovingUp = true;
+//                    if(player_MovingUp && pos_LevelY > heightJump){
+//                        pos_LevelY -= speed;
+//
+//                    }
+//                    else{player_FeetTileCollision = false; player_MovingUp = false;}
+//                }
 
                 //Jump only!
-                else if (kH.is_UpPressed && !kH.is_RightPressed && !kH.is_LeftPressed && !mH.is_AttackPressed && direction.equals("left")) {
-                    player_LeftMovingUp = true;
+                else if (kH.is_UpPressed && !kH.is_RightPressed && !kH.is_LeftPressed && !mH.is_AttackPressed) {
+                    player_FeetTileCollision = false;
+                    if( pos_LevelY > heightJump){pos_LevelY -= speed; player_MovingUp = true;}
                 }
-                else if (kH.is_UpPressed && !kH.is_RightPressed && !kH.is_LeftPressed && !mH.is_AttackPressed && direction.equals("right")) {
-                    player_RightMovingUp = true;
-                }
+
 
 
             //Vertical and horizontal movements
@@ -215,7 +229,7 @@ public class Player extends Entity {
         switch (direction){
             case "right":
                 if(spriteNum == 0){
-                    currentImage = playerImages.get(0);
+                    currentImage = playerImages.getFirst();
                 }
                 else if(spriteNum == 1){
                     currentImage = playerImages.get(1);
