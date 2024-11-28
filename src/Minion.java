@@ -17,7 +17,6 @@ public class Minion extends Entity{
         super(x, y, w, h,init_Direction);
         this.gp = gp;
         init_pos_LevelX = x;
-        this.setBounds(this.pos_LevelX,this.pos_LevelY,this.width,this.height);
         this.speed = 2;
         minionImages =  new ArrayList<BufferedImage>();
         this.gravity = 1/2;
@@ -50,13 +49,13 @@ public class Minion extends Entity{
     public void update(){
         //Minion sprite movements
         if(direction.equals("right")){
-            if (pos_LevelX >= init_pos_LevelX+(gp.tile_Width*3)){direction = "left";}
-            else if(pos_LevelX < init_pos_LevelX + (gp.tile_Width*3)){direction = "right";pos_LevelX += speed;}
+            if (levelX >= init_pos_LevelX+(gp.tile_Width*3)){direction = "left";}
+            else if(levelX < init_pos_LevelX + (gp.tile_Width*3)){direction = "right";levelX += speed;}
         }
 
         if(direction.equals("left")){
-            if (pos_LevelX <= init_pos_LevelX){direction = "right";}
-            else{direction = "left";pos_LevelX -= speed;}
+            if (levelX <= init_pos_LevelX){direction = "right";}
+            else{direction = "left";levelX -= speed;}
         }
             //spriteIndex is the times update get called in this case total 60 times
             spriteIndex++;
@@ -114,8 +113,8 @@ public class Minion extends Entity{
 
         }
 
-        int screenX = pos_LevelX - gp.player.pos_LevelX + gp.player.screenX;
-        int screenY = pos_LevelY - gp.player.pos_LevelY + gp.player.screenY;
+        int screenX = levelX - gp.player.levelX + gp.player.screenX;
+        int screenY = levelY - gp.player.levelY + gp.player.screenY;
         if(!collision){g2.drawImage(currentImage,screenX,screenY,width,height,null);}
 
 

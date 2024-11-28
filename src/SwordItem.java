@@ -26,8 +26,8 @@ public class SwordItem extends Item{
     }
 
     public void repaint(Graphics2D g2){
-        int screenX = pos_LevelX - gp.player.pos_LevelX + gp.player.screenX;
-        int screenY = pos_LevelY - gp.player.pos_LevelY + gp.player.screenY;
+        int screenX = pos_LevelX - gp.player.levelX + gp.player.screenX;
+        int screenY = pos_LevelY - gp.player.levelY + gp.player.screenY;
         if(!collision){g2.drawImage(img,screenX,screenY,width,height,null);}
 
     }

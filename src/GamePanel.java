@@ -36,7 +36,7 @@ public class GamePanel extends JPanel implements Runnable{
     Color brightHorizon;
     TileManager tileMgr;
     public  GamePanel(){
-        player = new Player(tile_Width,tile_Height*8,tile_Width*2,tile_Height*2,"right",this);
+        player = new Player(tile_Width * 1,tile_Height*7,tile_Width*2,tile_Height*2,"right",this);
         player.loadImages();
         minion1 = new Minion(tile_Width*60,tile_Height*8,tile_Width*2,tile_Height*2,"right",this);
         minion1.loadImages();
@@ -96,7 +96,6 @@ public class GamePanel extends JPanel implements Runnable{
         minion1.update();
         minion2.update();
         minion3.update();
-        player.collisions();
     }
 
     //Handles graphics painted on the game panel, such as the rectangle shaped entity

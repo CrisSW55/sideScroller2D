@@ -63,8 +63,10 @@ public class TileManager {
         try {
             Tile t1 = new Tile();
             t1.img = ImageIO.read(getClass().getResourceAsStream("/tiles/dirt_Tile.png"));
+            t1.collision = true;
             Tile t2 = new Tile();
             t2.img = ImageIO.read(getClass().getResourceAsStream("/tiles/grass_Tile.png"));
+            t2.collision = true;
             tiles.add(null);
             tiles.add(t1);
             tiles.add(t2);
@@ -78,12 +80,12 @@ public class TileManager {
             for(int col = 0; col<gp.totalLevelCol; col++){
                 int levelX = col * gp.tile_Width;
                 int levelY = row * gp.tile_Height;
-                int screenX = levelX - gp.player.pos_LevelX + gp.player.screenX;
-                int screenY = levelY - gp.player.pos_LevelY + gp.player.screenY;
+                int screenX = levelX - gp.player.levelX + gp.player.screenX;
+                int screenY = levelY - gp.player.levelY + gp.player.screenY;
                 //Add render efficiency bounds only rendering the current screen!
                 //      Write code here!    //
-                if(levelX > gp.player.pos_LevelX - gp.player.screenX - gp.player.width && levelX < gp.player.pos_LevelX + gp.player.screenX + gp.player.width &&
-                        levelY > gp.player.pos_LevelY - gp.player.screenY && levelY < gp.player.pos_LevelY + gp.player.screenY &&
+                if(levelX > gp.player.levelX - gp.player.screenX - gp.player.width && levelX < gp.player.levelX + gp.player.screenX + gp.player.width &&
+                        levelY > gp.player.levelY - gp.player.screenY && levelY < gp.player.levelY + gp.player.screenY &&
                         tiles.get(tileIndex[row][col]) != null){
                     tiles.get(tileIndex[row][col]).set_Position(col * gp.tile_Width,row*gp.tile_Height);
                     g2.drawImage(tiles.get(tileIndex[row][col]).img,screenX,screenY,gp.tile_Width,gp.tile_Height,null);

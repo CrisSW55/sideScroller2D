@@ -1,9 +1,9 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Entity extends Rectangle {
-    int pos_LevelX;
-    int pos_LevelY;
+public class Entity {
+    int levelX;
+    int levelY;
     int width;
     int height;
     public String direction;
@@ -11,11 +11,12 @@ public class Entity extends Rectangle {
     BufferedImage stand,run1,run2,run3,leftstand,leftrun1,leftrun2,leftrun3,swordattack,leftswordattack;
     int gravity;
     int speed;
+    Rectangle rectangle;
 
 
     public Entity(int x,int y, int w, int h,String direction){
-        this.pos_LevelX = x;
-        this.pos_LevelY = y;
+        this.levelX = x;
+        this.levelY = y;
         this.width = w;
         this.height = h;
         this.direction = direction;

@@ -10,8 +10,6 @@ public class Player extends Entity {
     BufferedImage currentImage;
     public int spriteIndex = 0;
     public int spriteNum = 1;
-
-
     GamePanel gp;
     KeyHandler kH;
     MouseHandler mH;
@@ -21,14 +19,19 @@ public class Player extends Entity {
     boolean player_MovingUp = false;
     public final int screenX;
     public final int screenY;
-    final int init_pos_LevelY = pos_LevelY;
-    final int heightJump = init_pos_LevelY - (height);
+    final int init_LevelY = levelY;
+    final int heightJump = init_LevelY - (height);
     public Player(int x, int y, int w, int h,String init_Direction,GamePanel gp) {
         super(x, y, w, h,init_Direction);
-        this.screenX = gp.screen_Width/2;
-        this.screenY = gp.screen_Height/2;
+        this.screenX = gp.screen_Width/2 - (gp.tile_Width/2);
+        this.screenY = gp.screen_Height/2 - (gp.tile_Height/2);
         this.gp = gp;
-        //this.setBounds(this.pos_LevelX,this.pos_LevelY,this.width,this.height);
+        rectangle = new Rectangle();
+        rectangle.x = 16;
+        rectangle.y = 32;
+        rectangle.width = width - 32;
+        rectangle.height = height -32;
+
         this.speed = 5;
         playerImages =  new ArrayList<BufferedImage>();
         this.gravity = 3;
@@ -66,127 +69,129 @@ public class Player extends Entity {
             e.printStackTrace();
         }
     }
-    public void collisions(){
-        //Player width = 96 pixels and height = 96 pixels
 
-        //Tile and Player collision
-        for(int row = 0; row<gp.totalLevelRow;row++){
-            for(int col = 0; col<gp.totalLevelCol; col++){
-                int level_Width = col * gp.tile_Width;
-                int level_Height = row * gp.tile_Height;
-                int screenX = level_Width - pos_LevelX + this.screenX;
-                int screenY = level_Height - pos_LevelY + this.screenY;
-                if(gp.tileMgr.tiles.get(gp.tileMgr.tileIndex[row][col]) != null){
-                    if (screenY <= pos_LevelY + (height + height/2 + 10) && screenY + (height/2)>= pos_LevelY) {
-                        player_FeetTileCollision = true;
-                        gp.tileMgr.tiles.get(gp.tileMgr.tileIndex[row][col]).collision = true;
+    public void tile_Collisions(){
+        int left_LevelX = levelX + rectangle.x;
 
-                        System.out.println("player position X: "+ pos_LevelX);
-                        System.out.println("player position Y: "+ pos_LevelY);
+        int right_LevelX = levelX + rectangle.x + rectangle.width;
 
-                        System.out.println("current tile position X: " + screenX);
-                        System.out.println("current tile position Y: " + screenY);
-                        System.out.println("row: " + row + " " + "col: "+ col);
+        int top_LevelY = levelY + rectangle.y;
+
+        int bottom_LevelY = levelY + rectangle.y + rectangle.height;
 
 
-
-                        break;
-
-                    }
-                    gp.tileMgr.tiles.get(gp.tileMgr.tileIndex[row][col]).collision = false;
-                    }
+        int left_Col = left_LevelX/gp.tile_Width;
 
 
+        int right_Col = right_LevelX/gp.tile_Width;
+
+
+        int top_Row = top_LevelY/(gp.tile_Height);
+
+
+        int bottom_Row = bottom_LevelY/gp.tile_Height;
+
+
+        int tileNum1, tileNum2;
+
+        if(direction.equals("up")){
+              top_Row = (top_LevelY - speed) / gp.tile_Height;
+              tileNum1 = gp.tileMgr.tileIndex[top_Row][left_Col];
+              tileNum2 = gp.tileMgr.tileIndex[top_Row][right_Col];
+              if(gp.tileMgr.tiles.get(tileNum1) != null && gp.tileMgr.tiles.get(tileNum1).collision ||
+                    gp.tileMgr.tiles.get(tileNum2) != null && gp.tileMgr.tiles.get(tileNum2).collision){
+                    collision = true;
+            }
+
+        }
+        else if(direction.equals("down")){
+            bottom_Row = (top_LevelY + speed) / gp.tile_Height;
+            tileNum1 = gp.tileMgr.tileIndex[bottom_Row][left_Col];
+            tileNum2 = gp.tileMgr.tileIndex[bottom_Row][right_Col];
+            if(gp.tileMgr.tiles.get(tileNum1) != null && gp.tileMgr.tiles.get(tileNum1).collision ||
+                    gp.tileMgr.tiles.get(tileNum2) != null && gp.tileMgr.tiles.get(tileNum2).collision){
+                collision = true;
+            }
+        }
+        else if(direction.equals("left")){
+            left_Col = (left_LevelX - speed) / gp.tile_Width;
+            tileNum1 = gp.tileMgr.tileIndex[top_Row][left_Col];
+            tileNum2 = gp.tileMgr.tileIndex[bottom_Row][left_Col];
+            if(gp.tileMgr.tiles.get(tileNum1) != null && gp.tileMgr.tiles.get(tileNum1).collision ||
+                    gp.tileMgr.tiles.get(tileNum2) != null && gp.tileMgr.tiles.get(tileNum2).collision){
+                collision = true;
+            }
+        }
+        else if(direction.equals("right")){
+            right_Col = (right_LevelX - speed) / gp.tile_Width;
+            tileNum1 = gp.tileMgr.tileIndex[top_Row][right_Col];
+            tileNum2 = gp.tileMgr.tileIndex[bottom_Row][right_Col];
+            if(gp.tileMgr.tiles.get(tileNum1) != null && gp.tileMgr.tiles.get(tileNum1).collision ||
+                    gp.tileMgr.tiles.get(tileNum2) != null && gp.tileMgr.tiles.get(tileNum2).collision){
+                collision = true;
             }
         }
 
+    }
+    public void other_collisions(){
+        //Player width = 96 pixels and height = 96 pixels
+
         //SwordItem and Player collision, equipping sword
-        if (gp.swordItem.pos_LevelX <= pos_LevelX + (width / 2) && gp.swordItem.pos_LevelX+ (width / 2)>= pos_LevelX &&
-                gp.swordItem.pos_LevelY <= pos_LevelY + (height) && gp.swordItem.pos_LevelY+ (height/2)>= pos_LevelY) {
+        if (gp.swordItem.pos_LevelX <= levelX + (width / 2) && gp.swordItem.pos_LevelX+ (width / 2)>= levelX &&
+                gp.swordItem.pos_LevelY <= levelY + (height) && gp.swordItem.pos_LevelY+ (height/2)>= levelY) {
             sword_Equipped = true;
             gp.swordItem.collision = true;
         }
         //Minion and Player collision, attacked minion collides with player sword
-        if (gp.minion1.pos_LevelX <= pos_LevelX + (width*.75) && gp.minion1.pos_LevelX+ (width*.75)>= pos_LevelX && mH.is_AttackPressed && sword_Equipped &&
-        gp.minion1.pos_LevelY <= pos_LevelY + (height) && gp.minion1.pos_LevelY+ (height*.75)>= pos_LevelY) {
+        if (gp.minion1.levelX <= levelX + (width*.75) && gp.minion1.levelX+ (width*.75)>= levelX && mH.is_AttackPressed && sword_Equipped &&
+        gp.minion1.levelY <= levelY + (height) && gp.minion1.levelY+ (height*.75)>= levelY) {
             sword_Hit = true;
             gp.minion1.collision = true;
         }
-        if (gp.minion2.pos_LevelX <= pos_LevelX + (width*.75) && gp.minion2.pos_LevelX+ (width*.75)>= pos_LevelX && mH.is_AttackPressed && sword_Equipped &&
-                gp.minion2.pos_LevelY <= pos_LevelY + (height) && gp.minion2.pos_LevelY+ (height*.75)>= pos_LevelY) {
+        if (gp.minion2.levelX <= levelX + (width*.75) && gp.minion2.levelX+ (width*.75)>= levelX && mH.is_AttackPressed && sword_Equipped &&
+                gp.minion2.levelY <= levelY + (height) && gp.minion2.levelY+ (height*.75)>= levelY) {
             sword_Hit = true;
             gp.minion2.collision = true;
         }
-        if (gp.minion3.pos_LevelX <= pos_LevelX + (width*.75) && gp.minion3.pos_LevelX+ (width*.75)>= pos_LevelX && mH.is_AttackPressed && sword_Equipped &&
-                gp.minion3.pos_LevelY <= pos_LevelY + (height) && gp.minion3.pos_LevelY+ (height*.75)>= pos_LevelY) {
+        if (gp.minion3.levelX <= levelX + (width*.75) && gp.minion3.levelX+ (width*.75)>= levelX && mH.is_AttackPressed && sword_Equipped &&
+                gp.minion3.levelY <= levelY + (height) && gp.minion3.levelY+ (height*.75)>= levelY) {
             sword_Hit = true;
             gp.minion3.collision = true;
         }
     }
     public void update(){
 
-        //Player sprite horizontal movements
-        // (kH.is_UpPressed && kH.is_LeftPressed) || (kH.is_UpPressed && kH.is_RightPressed)
+        //Player sprite horizontal movement
         if ( kH.is_RightPressed || kH.is_LeftPressed || kH.is_DownPressed || kH.is_UpPressed)  {
 
-            //Player moving attacking
-            if (mH.is_AttackPressed && sword_Equipped && kH.is_RightPressed) {
-                if (direction.equals("right")) {
-                    spriteNum = 8;
-                    direction = "right";
-                    pos_LevelX += speed;
-                }
+            //Horizontal or vertical direction setters
+            if (kH.is_LeftPressed && !kH.is_RightPressed && !kH.is_UpPressed && !kH.is_DownPressed && !mH.is_AttackPressed) {direction = "left";}
+            else if (kH.is_RightPressed && !kH.is_LeftPressed && !kH.is_UpPressed && !kH.is_DownPressed && !mH.is_AttackPressed) {direction = "right";}
+            else if (kH.is_UpPressed && !kH.is_LeftPressed && !kH.is_RightPressed && !kH.is_DownPressed && !mH.is_AttackPressed) {direction = "up";}
+            else if (kH.is_DownPressed && !kH.is_LeftPressed && !kH.is_RightPressed && !kH.is_UpPressed && !mH.is_AttackPressed) {direction = "down";}
+
+            //Player  attacking
+            if (mH.is_AttackPressed && sword_Equipped && kH.is_RightPressed&&direction.equals("right")) {
+                spriteNum = 8;
             }
-            else if (mH.is_AttackPressed && sword_Equipped && kH.is_LeftPressed) {
-                if (direction.equals("left")) {
-                    spriteNum = 9;
-                    direction = "left";
-                    pos_LevelX -= speed;
-                }
+            else if (mH.is_AttackPressed && sword_Equipped && kH.is_LeftPressed && direction.equals("left")) {
+                spriteNum = 9;
             }
 
-            //Gravity on player, player and tile collision
-            // Need to jumping bug jumps again after jumping once
-                if (!player_FeetTileCollision && pos_LevelY <= heightJump && player_MovingUp) {
-                    pos_LevelY += speed;
-                    if(pos_LevelY > heightJump){player_MovingUp = false;}
+            //Collisions
+            collision = false;
+            tile_Collisions();
+            other_collisions();
 
-                    System.out.println("Player y position: gravity " + pos_LevelY);
-//                    player_MovingUp = true;
-//                    player_MovingUp = false;
-                }
-
-                //Diagonal movements
-
-//                else if (kH.is_UpPressed  && kH.is_RightPressed && !kH.is_LeftPressed && !mH.is_AttackPressed) {
-//                   pos_LevelX += speed;
-//                   player_MovingUp = true;
-//                   if(player_MovingUp && pos_LevelY > heightJump){
-//                        pos_LevelY -= speed;
-//                       player_FeetTileCollision = false; player_MovingUp = false;
-//                   }
-//                }
-//                else if (kH.is_UpPressed  && kH.is_LeftPressed && !kH.is_RightPressed  && !mH.is_AttackPressed) {
-//                pos_LevelX -= speed;
-//                player_MovingUp = true;
-//                    if(player_MovingUp && pos_LevelY > heightJump){
-//                        pos_LevelY -= speed;
-//
-//                    }
-//                    else{player_FeetTileCollision = false; player_MovingUp = false;}
-//                }
-
-                //Jump only!
-                else if (kH.is_UpPressed && !kH.is_RightPressed && !kH.is_LeftPressed && !mH.is_AttackPressed) {
-                    player_FeetTileCollision = false;
-                    if( pos_LevelY > heightJump){pos_LevelY -= speed; player_MovingUp = true;}
-                }
+            //Horizontal and vertical movements
+            if(!collision){
+                if(direction.equals("up")){levelY -= speed;}
+                else if(direction.equals("down")){levelY += speed;}
+                else if(direction.equals("left")){levelX -= speed;}
+                else if(direction.equals("right")){levelX += speed;}
+            }
 
 
-
-            //Vertical and horizontal movements
-            else if (!kH.is_UpPressed && kH.is_LeftPressed && !mH.is_AttackPressed) {direction = "left";pos_LevelX -= speed;}
-            else if (!kH.is_UpPressed && kH.is_RightPressed && !mH.is_AttackPressed) {direction = "right";pos_LevelX += speed;}
 
 
             //spriteIndex is the times update get called in this case total 60 times
@@ -222,6 +227,8 @@ public class Player extends Entity {
             // Handle left idle state
             spriteNum = 4; //Assuming 4 is for leftstanding
         }
+        this.player_FeetTileCollision = false;
+
 
     }
 
