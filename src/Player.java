@@ -19,8 +19,11 @@ public class Player extends Entity {
     boolean player_MovingUp = false;
     public final int screenX;
     public final int screenY;
-    final int init_LevelY = levelY;
-    final int heightJump = init_LevelY - (height);
+
+    //Player jump variables
+    int maxJumpHeight;
+    boolean isJumping = false;
+
     public Player(int x, int y, int w, int h,String init_Direction,GamePanel gp) {
         super(x, y, w, h,init_Direction);
         this.screenX = gp.screen_Width/2 - (gp.tile_Width/2);
@@ -72,63 +75,75 @@ public class Player extends Entity {
 
     public void tile_Collisions(){
         int left_LevelX = levelX + rectangle.x;
-
         int right_LevelX = levelX + rectangle.x + rectangle.width;
-
         int top_LevelY = levelY + rectangle.y;
-
         int bottom_LevelY = levelY + rectangle.y + rectangle.height;
 
-
         int left_Col = left_LevelX/gp.tile_Width;
-
-
         int right_Col = right_LevelX/gp.tile_Width;
-
-
         int top_Row = top_LevelY/(gp.tile_Height);
-
-
         int bottom_Row = bottom_LevelY/gp.tile_Height;
 
 
         int tileNum1, tileNum2;
+        if(!down_Collision){
+            bottom_Row = (bottom_LevelY + speed) / gp.tile_Height;
+            tileNum1 = gp.tileMgr.tileIndex[bottom_Row][left_Col];
+            tileNum2 = gp.tileMgr.tileIndex[bottom_Row][right_Col];
+            System.out.println("Player levelY: " + levelY);
+            if(levelY >= 640){gp.gThread.interrupt();}
+            System.out.println("Is interrupted? : " + gp.gThread.isInterrupted());
 
-        if(direction.equals("up")){
+            if(gp.tileMgr.tiles.get(tileNum1) != null && gp.tileMgr.tiles.get(tileNum1).collision ||
+                    gp.tileMgr.tiles.get(tileNum2) != null && gp.tileMgr.tiles.get(tileNum2).collision){
+                down_Collision = true;
+            }
+            if (gp.tileMgr.tiles.get(tileNum1) == null && gp.tileMgr.tiles.get(tileNum2) == null) {
+                down_Collision = false;
+            }
+        }
+        else if(down_Collision) {
+            bottom_Row = (bottom_LevelY + speed) / gp.tile_Height;
+            tileNum1 = gp.tileMgr.tileIndex[bottom_Row][left_Col];
+            tileNum2 = gp.tileMgr.tileIndex[bottom_Row][right_Col];
+            if (gp.tileMgr.tiles.get(tileNum1) == null && gp.tileMgr.tiles.get(tileNum2) == null) {
+                down_Collision = false;
+            }
+        }
+
+        else if(direction.equals("up")){
               top_Row = (top_LevelY - speed) / gp.tile_Height;
               tileNum1 = gp.tileMgr.tileIndex[top_Row][left_Col];
               tileNum2 = gp.tileMgr.tileIndex[top_Row][right_Col];
               if(gp.tileMgr.tiles.get(tileNum1) != null && gp.tileMgr.tiles.get(tileNum1).collision ||
                     gp.tileMgr.tiles.get(tileNum2) != null && gp.tileMgr.tiles.get(tileNum2).collision){
-                    collision = true;
+                    up_Collision = true;
+
             }
 
         }
-        else if(direction.equals("down")){
-            bottom_Row = (top_LevelY + speed) / gp.tile_Height;
-            tileNum1 = gp.tileMgr.tileIndex[bottom_Row][left_Col];
-            tileNum2 = gp.tileMgr.tileIndex[bottom_Row][right_Col];
-            if(gp.tileMgr.tiles.get(tileNum1) != null && gp.tileMgr.tiles.get(tileNum1).collision ||
-                    gp.tileMgr.tiles.get(tileNum2) != null && gp.tileMgr.tiles.get(tileNum2).collision){
-                collision = true;
-            }
-        }
+
+
         else if(direction.equals("left")){
             left_Col = (left_LevelX - speed) / gp.tile_Width;
             tileNum1 = gp.tileMgr.tileIndex[top_Row][left_Col];
             tileNum2 = gp.tileMgr.tileIndex[bottom_Row][left_Col];
             if(gp.tileMgr.tiles.get(tileNum1) != null && gp.tileMgr.tiles.get(tileNum1).collision ||
                     gp.tileMgr.tiles.get(tileNum2) != null && gp.tileMgr.tiles.get(tileNum2).collision){
-                collision = true;
+                left_Collision = true;
             }
         }
         else if(direction.equals("right")){
-            right_Col = (right_LevelX - speed) / gp.tile_Width;
+            right_Col = (right_LevelX + speed) / gp.tile_Width;
             tileNum1 = gp.tileMgr.tileIndex[top_Row][right_Col];
             tileNum2 = gp.tileMgr.tileIndex[bottom_Row][right_Col];
+//            System.out.println("top_Row: " + top_Row);
+//            System.out.println("bottom_Row: " + bottom_Row);
+//            System.out.println("right_Col: " + right_Col);
             if(gp.tileMgr.tiles.get(tileNum1) != null && gp.tileMgr.tiles.get(tileNum1).collision ||
                     gp.tileMgr.tiles.get(tileNum2) != null && gp.tileMgr.tiles.get(tileNum2).collision){
-                collision = true;
+                right_Collision = true;
+                //System.out.println("LevelY: "+levelY);
             }
         }
 
@@ -160,74 +175,95 @@ public class Player extends Entity {
         }
     }
     public void update(){
-
         //Player sprite horizontal movement
-        if ( kH.is_RightPressed || kH.is_LeftPressed || kH.is_DownPressed || kH.is_UpPressed)  {
 
-            //Horizontal or vertical direction setters
-            if (kH.is_LeftPressed && !kH.is_RightPressed && !kH.is_UpPressed && !kH.is_DownPressed && !mH.is_AttackPressed) {direction = "left";}
-            else if (kH.is_RightPressed && !kH.is_LeftPressed && !kH.is_UpPressed && !kH.is_DownPressed && !mH.is_AttackPressed) {direction = "right";}
-            else if (kH.is_UpPressed && !kH.is_LeftPressed && !kH.is_RightPressed && !kH.is_DownPressed && !mH.is_AttackPressed) {direction = "up";}
-            else if (kH.is_DownPressed && !kH.is_LeftPressed && !kH.is_RightPressed && !kH.is_UpPressed && !mH.is_AttackPressed) {direction = "down";}
+        if(!gp.gThread.isInterrupted()){
+            // Calls the tileCollision method to make downCollision = true; hits the bottomRow as tile.collision = true;
 
-            //Player  attacking
-            if (mH.is_AttackPressed && sword_Equipped && kH.is_RightPressed&&direction.equals("right")) {
-                spriteNum = 8;
-            }
-            else if (mH.is_AttackPressed && sword_Equipped && kH.is_LeftPressed && direction.equals("left")) {
-                spriteNum = 9;
-            }
+            if(!down_Collision && !isJumping){levelY += 5;tile_Collisions();}
 
-            //Collisions
-            collision = false;
-            tile_Collisions();
-            other_collisions();
+            //Set the maxJumpHeight when player colliding with bottomTiles and not jumping yet!
 
-            //Horizontal and vertical movements
-            if(!collision){
-                if(direction.equals("up")){levelY -= speed;}
-                else if(direction.equals("down")){levelY += speed;}
-                else if(direction.equals("left")){levelX -= speed;}
-                else if(direction.equals("right")){levelX += speed;}
+            if(down_Collision && !isJumping){maxJumpHeight = levelY - 200;}
+
+            //Set the is Jumping = true;
+            if(kH.is_UpPressed && down_Collision){isJumping = true;}
+
+            //Only change the player's y position upwards  when jumping and levelY is greater than the maxJumpHeight
+            if(down_Collision && isJumping && (levelY > maxJumpHeight)){
+                levelY -= 10;
+                if(levelY <= maxJumpHeight){
+                    isJumping = false;
+                    tile_Collisions();
+                }
             }
 
+            if ( kH.is_RightPressed || kH.is_LeftPressed)  {
+
+                //Horizontal or vertical direction setters
+                if (kH.is_LeftPressed && !kH.is_RightPressed && !kH.is_UpPressed && !kH.is_DownPressed && !mH.is_AttackPressed) {direction = "left";}
+                else if (kH.is_RightPressed && !kH.is_LeftPressed && !kH.is_UpPressed && !kH.is_DownPressed && !mH.is_AttackPressed) {direction = "right";}
+
+                //Player  attacking
+                if (mH.is_AttackPressed && sword_Equipped && kH.is_RightPressed&&direction.equals("right")) {spriteNum = 8;}
+                else if (mH.is_AttackPressed && sword_Equipped && kH.is_LeftPressed && direction.equals("left")) {spriteNum = 9;}
+
+                //Collisions
+                left_Collision = false;
+                right_Collision = false;
+
+                tile_Collisions(); // Allows the down_Collision to become true
+                other_collisions();
+
+                System.out.println("left_Collision: " + left_Collision);
+                System.out.println("right_Collision: " + right_Collision);
+                System.out.println("up_Collision: " + up_Collision);
+                System.out.println("down_Collision: " + down_Collision);
+                //Horizontal  movements
+                if(!left_Collision && down_Collision){
+                    if(levelX >= 0 && direction.equals("left")){levelX -= speed;}
+                }
+                if(!right_Collision && down_Collision){
+                    if(levelX <=  3744  && direction.equals("right")){levelX += speed;}
+                }
 
 
+                // spriteIndex is the times update get called in this case total 60 times
 
-            //spriteIndex is the times update get called in this case total 60 times
-
-            spriteIndex++;
-            //So for every spriteIndex > 10, updates per 10 times, the spriteNum changes!
-            if (direction.equals("left") && spriteIndex > 10 && !mH.is_AttackPressed) {
-                spriteNum = (spriteNum % 3) + 5; // Cycle through left sprites
-                spriteIndex = 0;
+                spriteIndex++;
+                //So for every spriteIndex > 10, updates per 10 times, the spriteNum changes!
+                if (direction.equals("left") && spriteIndex > 10 && !mH.is_AttackPressed && down_Collision) {
+                    spriteNum = (spriteNum % 3) + 5; // Cycle through left sprites
+                    spriteIndex = 0;
+                }
+                else if (direction.equals("right") && spriteIndex > 10 && !mH.is_AttackPressed && down_Collision) {
+                    spriteNum = (spriteNum % 3) + 1; // Cycle through right sprites
+                    spriteIndex = 0;
+                }
             }
-            else if (direction.equals("right") && spriteIndex > 10 && !mH.is_AttackPressed) {
-                spriteNum = (spriteNum % 3) + 1; // Cycle through right sprites
-                spriteIndex = 0;
+
+            //Player standing attacking
+            else if (mH.is_AttackPressed && sword_Equipped) {
+                if (direction.equals("right")) {
+                    spriteNum = 8;
+                }
+                else if (direction.equals("left")) {
+                    spriteNum = 9;
+                }
+            }
+
+            //Player standing
+            else if(direction.equals("right")){
+                // Handle right idle state
+                spriteNum = 0; // Assuming 0 is for standing
+            }
+            else if(direction.equals("left")){
+                // Handle left idle state
+                spriteNum = 4; //Assuming 4 is for leftstanding
             }
         }
 
-        //Player standing attacking
-        else if (mH.is_AttackPressed && sword_Equipped) {
-            if (direction.equals("right")) {
-                spriteNum = 8;
-            }
-            else if (direction.equals("left")) {
-                spriteNum = 9;
-            }
-        }
 
-        //Player standing
-        else if(direction.equals("right")){
-            // Handle right idle state
-            spriteNum = 0; // Assuming 0 is for standing
-        }
-        else if(direction.equals("left")){
-            // Handle left idle state
-            spriteNum = 4; //Assuming 4 is for leftstanding
-        }
-        this.player_FeetTileCollision = false;
 
 
     }

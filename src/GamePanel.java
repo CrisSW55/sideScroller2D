@@ -36,7 +36,8 @@ public class GamePanel extends JPanel implements Runnable{
     Color brightHorizon;
     TileManager tileMgr;
     public  GamePanel(){
-        player = new Player(tile_Width * 1,tile_Height*7,tile_Width*2,tile_Height*2,"right",this);
+        //381 collides with first bottomTile!
+        player = new Player( tile_Width*20,300,tile_Width*2,tile_Height*2,"right",this);
         player.loadImages();
         minion1 = new Minion(tile_Width*60,tile_Height*8,tile_Width*2,tile_Height*2,"right",this);
         minion1.loadImages();
@@ -63,6 +64,7 @@ public class GamePanel extends JPanel implements Runnable{
     public void init_Thread(){
         gThread = new Thread(this);
         gThread.start();
+
         //System.out.println("After starting thread!");
     }
 
@@ -77,6 +79,7 @@ public class GamePanel extends JPanel implements Runnable{
         double FPS = 60;
         double fpsInterval = FPS/1000000000;
         long startTime = System.nanoTime();
+
         while(gThread != null){
             long endTime = System.nanoTime();
             deltaTime = endTime - startTime;

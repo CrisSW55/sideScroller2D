@@ -16,5 +16,10 @@ public class Main extends JFrame{
         frame.setSize(gPanel.screen_Width,gPanel.screen_Height);
         frame.setLocation((int)center_winPosX,(int)center_winPosY);
         frame.setVisible(true);
+
+        while(gPanel.gThread != null){
+            if(gPanel.gThread.isInterrupted()){frame.dispose();}
+        }
+
     }
 }
