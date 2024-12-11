@@ -37,7 +37,7 @@ public class GamePanel extends JPanel implements Runnable{
     TileManager tileMgr;
     public  GamePanel(){
         //381 collides with first bottomTile!
-        player = new Player( tile_Width*20,300,tile_Width*2,tile_Height*2,"right",this);
+        player = new Player( tile_Width*70,100,tile_Width*2,tile_Height*2,"right",this);
         player.loadImages();
         minion1 = new Minion(tile_Width*60,tile_Height*8,tile_Width*2,tile_Height*2,"right",this);
         minion1.loadImages();
