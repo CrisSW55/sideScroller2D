@@ -5,6 +5,7 @@ public class Main extends JFrame{
     public static void main(String[] args) {
         GamePanel gPanel = new GamePanel();
         gPanel.init_Thread();
+
         //Position the window at the center of the monitor
         double center_winPosX = gPanel.monitor_Width *.5 - (gPanel.screen_Width*.5);
         double center_winPosY = gPanel.monitor_Height * .5 - (gPanel.screen_Height*.5);

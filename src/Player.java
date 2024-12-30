@@ -210,23 +210,29 @@ public class Player extends Entity {
         //Player width = 96 pixels and height = 96 pixels
 
         //SwordItem and Player collision, equipping sword
-        if (gp.swordItem.pos_LevelX <= levelX + (width / 2) && gp.swordItem.pos_LevelX+ (width / 2)>= levelX &&
-                gp.swordItem.pos_LevelY <= levelY + (height) && gp.swordItem.pos_LevelY+ (height/2)>= levelY) {
+        if (gp.swordItem.pos_LevelX <= levelX + (width / 2) &&
+                gp.swordItem.pos_LevelX+ (width / 2)>= levelX &&
+                gp.swordItem.pos_LevelY <= levelY + (height) &&
+                gp.swordItem.pos_LevelY+ (height/2)>= levelY    ) {
             sword_Equipped = true;
             gp.swordItem.collision = true;
         }
         //Minion and Player collision, attacked minion collides with player sword
-        if (gp.minion1.levelX <= levelX + (width*.75) && gp.minion1.levelX+ (width*.75)>= levelX && mH.is_AttackPressed && sword_Equipped &&
-        gp.minion1.levelY <= levelY + (height) && gp.minion1.levelY+ (height*.75)>= levelY) {
-            sword_Hit = true;
-            gp.minion1.collision = true;
+        else if (gp.minion1.levelX <= levelX + (width*.75) &&
+                gp.minion1.levelX+ (width*.75)>= levelX &&
+                mH.is_AttackPressed &&
+                sword_Equipped &&
+                gp.minion1.levelY <= levelY + (height) &&
+                gp.minion1.levelY+ (height*.75)>= levelY    ) {
+                sword_Hit = true;
+                gp.minion1.collision = true;
         }
-        if (gp.minion2.levelX <= levelX + (width*.75) && gp.minion2.levelX+ (width*.75)>= levelX && mH.is_AttackPressed && sword_Equipped &&
+        else if (gp.minion2.levelX <= levelX + (width*.75) && gp.minion2.levelX+ (width*.75)>= levelX && mH.is_AttackPressed && sword_Equipped &&
                 gp.minion2.levelY <= levelY + (height) && gp.minion2.levelY+ (height*.75)>= levelY) {
             sword_Hit = true;
             gp.minion2.collision = true;
         }
-        if (gp.minion3.levelX <= levelX + (width*.75) && gp.minion3.levelX+ (width*.75)>= levelX && mH.is_AttackPressed && sword_Equipped &&
+        else if (gp.minion3.levelX <= levelX + (width*.75) && gp.minion3.levelX+ (width*.75)>= levelX && mH.is_AttackPressed && sword_Equipped &&
                 gp.minion3.levelY <= levelY + (height) && gp.minion3.levelY+ (height*.75)>= levelY) {
             sword_Hit = true;
             gp.minion3.collision = true;
@@ -251,7 +257,7 @@ public class Player extends Entity {
                 if(!kH.is_RightPressed && !kH.is_LeftPressed && (kH.is_UpPressed && down_Collision && !isJumping)){isJumping = true;}
                 vertical_Collisions();
                 horizontal_Collisions();
-                other_collisions();
+
 
                 System.out.println("up_Collision: " + up_Collision);
                 System.out.println("down_Collision: " + down_Collision);
@@ -276,7 +282,7 @@ public class Player extends Entity {
 
                 vertical_Collisions();
                 horizontal_Collisions();
-                other_collisions();
+
 
                 System.out.println("up_Collision: " + up_Collision);
                 System.out.println("down_Collision: " + down_Collision);
@@ -324,6 +330,7 @@ public class Player extends Entity {
                 // Handle left idle state
                 spriteNum = 4; //Assuming 4 is for leftstanding
             }
+            other_collisions();
         }
 
 
