@@ -102,11 +102,11 @@ public class Player extends Entity {
                 bottom_Row = (bottom_LevelY + speed) / gp.tile_Height;
                 tileNum1 = gp.tileMgr.tileIndex[bottom_Row][left_Col];
                 tileNum2 = gp.tileMgr.tileIndex[bottom_Row][right_Col];
-                System.out.println("Player levelY: " + levelY);
+                //System.out.println("Player levelY: " + levelY);
                 if (levelY >= 640) {
                     gp.gThread.interrupt();
                 }
-                System.out.println("Is interrupted? : " + gp.gThread.isInterrupted());
+                //System.out.println("Is interrupted? : " + gp.gThread.isInterrupted());
 
                 if (gp.tileMgr.tiles.get(tileNum1) != null && gp.tileMgr.tiles.get(tileNum1).collision ||
                         gp.tileMgr.tiles.get(tileNum2) != null && gp.tileMgr.tiles.get(tileNum2).collision) {
@@ -136,11 +136,11 @@ public class Player extends Entity {
                 bottom_Row = (bottom_LevelY + speed) / gp.tile_Height;
                 tileNum1 = gp.tileMgr.tileIndex[bottom_Row][left_Col];
                 tileNum2 = gp.tileMgr.tileIndex[bottom_Row][right_Col];
-                System.out.println("Player levelY: " + levelY);
+                //System.out.println("Player levelY: " + levelY);
                 if (levelY >= 640) {
                     gp.gThread.interrupt();
                 }
-                System.out.println("Is interrupted? : " + gp.gThread.isInterrupted());
+                //System.out.println("Is interrupted? : " + gp.gThread.isInterrupted());
 
                 if (gp.tileMgr.tiles.get(tileNum1) != null && gp.tileMgr.tiles.get(tileNum1).collision ||
                         gp.tileMgr.tiles.get(tileNum2) != null && gp.tileMgr.tiles.get(tileNum2).collision) {
@@ -201,12 +201,16 @@ public class Player extends Entity {
             //Both downCollision and isJumping are true at the moment when player, for  the first time presses W Key (jump key)
             if (down_Collision && isJumping && levelY > maxJumpHeight) {
                 levelY -= 10;
-                if (levelY <= maxJumpHeight) {
-                    isJumping = false;
-                }
+                kH.is_UpPressed = false;
+                if (levelY <= maxJumpHeight) {isJumping = false;}
             }
 
-            if ((kH.is_UpPressed && down_Collision && !isJumping)) {isJumping = true;}
+            if ((kH.is_UpPressed && down_Collision && !isJumping)) {
+                isJumping = true;
+                kH.is_UpPressed = false;
+                tileCollisions();
+
+            }
 
 
             //Any time player presses down on keys boolean values change!
