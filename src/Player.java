@@ -116,6 +116,24 @@ public class Player extends Entity {
                 }
 
             }
+            if (!up_Collision && isJumping || up_Collision && isJumping) {
+                top_Row = (top_LevelY - speed) / gp.tile_Height;
+                tileNum1 = gp.tileMgr.tileIndex[top_Row][left_Col];
+                tileNum2 = gp.tileMgr.tileIndex[top_Row][right_Col];
+                //System.out.println("Player levelY: " + levelY);
+                if (levelY >= 640) {
+                    gp.gThread.interrupt();
+                }
+                //System.out.println("Is interrupted? : " + gp.gThread.isInterrupted());
+
+                if (gp.tileMgr.tiles.get(tileNum1) != null && gp.tileMgr.tiles.get(tileNum1).collision ||
+                        gp.tileMgr.tiles.get(tileNum2) != null && gp.tileMgr.tiles.get(tileNum2).collision) {
+                    up_Collision = true;
+                } else if (gp.tileMgr.tiles.get(tileNum1) == null && gp.tileMgr.tiles.get(tileNum2) == null) {
+                    up_Collision = false;
+                }
+
+            }
 
 
         }
@@ -147,6 +165,25 @@ public class Player extends Entity {
                     down_Collision = true;
                 } else if (gp.tileMgr.tiles.get(tileNum1) == null && gp.tileMgr.tiles.get(tileNum2) == null) {
                     down_Collision = false;
+                }
+
+            }
+
+            if (!up_Collision && isJumping || up_Collision && isJumping) {
+                top_Row = (top_LevelY - speed) / gp.tile_Height;
+                tileNum1 = gp.tileMgr.tileIndex[top_Row][left_Col];
+                tileNum2 = gp.tileMgr.tileIndex[top_Row][right_Col];
+                //System.out.println("Player levelY: " + levelY);
+                if (levelY >= 640) {
+                    gp.gThread.interrupt();
+                }
+                //System.out.println("Is interrupted? : " + gp.gThread.isInterrupted());
+
+                if (gp.tileMgr.tiles.get(tileNum1) != null && gp.tileMgr.tiles.get(tileNum1).collision ||
+                        gp.tileMgr.tiles.get(tileNum2) != null && gp.tileMgr.tiles.get(tileNum2).collision) {
+                    up_Collision = true;
+                } else if (gp.tileMgr.tiles.get(tileNum1) == null && gp.tileMgr.tiles.get(tileNum2) == null) {
+                    up_Collision = false;
                 }
 
             }
@@ -198,23 +235,29 @@ public class Player extends Entity {
             //Set maxJumpHeight when player colliding with bottomTile!
             if (down_Collision && !isJumping) {maxJumpHeight = levelY - 200;}
 
-            //Both downCollision and isJumping are true at the moment when player, for  the first time presses W Key (jump key)
-            if (down_Collision && isJumping && levelY > maxJumpHeight) {
-                levelY -= 10;
-                kH.is_UpPressed = false;
-                if (levelY <= maxJumpHeight) {isJumping = false;}
-            }
 
-            if ((kH.is_UpPressed && down_Collision && !isJumping)) {
+            //One jump call only whether holding W Key or pressing only once!
+            if ((kH.is_UpPressed && down_Collision &&!isJumping)) {
                 isJumping = true;
                 kH.is_UpPressed = false;
                 tileCollisions();
+            }
+
+            if (isJumping && levelY > maxJumpHeight) {
+                levelY -= 10;
+                tileCollisions();
+                System.out.println("upCollision: " + up_Collision);
+                System.out.println("down_Collision: " + down_Collision);
+                if (up_Collision || levelY <= maxJumpHeight) {isJumping = false;}
 
             }
 
 
+
+
+
             //Any time player presses down on keys boolean values change!
-            else if (kH.is_RightPressed || kH.is_LeftPressed) {
+            if (kH.is_RightPressed || kH.is_LeftPressed) {
 
                 //Horizontal or vertical direction setters
                 if (kH.is_LeftPressed && !kH.is_RightPressed && !kH.is_UpPressed && !mH.is_AttackPressed) {
