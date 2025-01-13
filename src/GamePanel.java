@@ -41,6 +41,7 @@ public class GamePanel extends JPanel implements Runnable{
     UserInterface userInterface;
     public  GamePanel(){
         //381 collides with first bottomTile!
+        //Initial x position player: tile_Width*4
         player = new Player( tile_Width*4,100,tile_Width*2,tile_Height*2,"right",this);
         player.loadImages();
         //Initialize and load minions' images
@@ -59,7 +60,7 @@ public class GamePanel extends JPanel implements Runnable{
         minionCount = minionList.size();
 
         //initial position tile_Width*77
-        swordItem = new SwordItem((tile_Width*16),((tile_Height*4)+tile_Height/2)+(tile_Height/2),tile_Width,tile_Height,this);
+        swordItem = new SwordItem((tile_Width*77),((tile_Height*8)+tile_Height/2)+(tile_Height/2),tile_Width,tile_Height,this);
         swordItem.loadItemImages();
         tileMgr = new TileManager(this);
         tileMgr.load_TileImages();
@@ -114,12 +115,30 @@ public class GamePanel extends JPanel implements Runnable{
         for(int i = 0; i<minionList.size();i++){
             //Update all minions within list
             if(minionList.get(i)!= null){
-                if(minionList.get(i).collision){
+                //When player lands sword hit on minion, the minion dies and set to null
+                //Also, the userInterface minionCount decrements
+                if(minionList.get(i).collision && player.sword_Hit){
                     minionList.set(i,null);
                     minionCount -= 1;
                     break;
                 }
-                minionList.get(i).update();
+
+                //Using heartsStack to remove top image everytime player collides with minion, while player no sword hit
+                else if(minionList.get(i).collision){
+                    if(userInterface.heartsStack.size() > 1 ){
+                        if(minionList.get(i).direction.equals("left")){
+                            player.levelX -= tile_Width*2;
+                            player.tileCollisions();
+                            userInterface.heartsStack.pop();
+                        }
+                        else if(minionList.get(i).direction.equals("right")){
+                            player.levelX += tile_Width*2;
+                            player.tileCollisions();
+                            userInterface.heartsStack.pop();
+                        }
+                    }
+                }
+                else{minionList.get(i).update();}
 
             }
         }

@@ -215,43 +215,19 @@ public class Player extends Entity {
                         gp.minionList.get(i).levelY + (height * .75) >= levelY) {
                     sword_Hit = true;
                     gp.minionList.get(i).collision = true;
+                    break;
                 }
+                //Minion and Player collision, attacked minion collides with player sword
+                else if (gp.minionList.get(i).levelX <= levelX + (width * .75) &&
+                        gp.minionList.get(i).levelX + (width * .75) >= levelX &&
+                        gp.minionList.get(i).levelY <= levelY + (height) &&
+                        gp.minionList.get(i).levelY + (height * .75) >= levelY) {
+                    gp.minionList.get(i).collision = true;
+                }
+                else{gp.minionList.get(i).collision = false;sword_Hit = false;}
             }
 
         }
-
-//        //Minion and Player collision, attacked minion collides with player sword
-//        if (gp.minionList.getFirst().levelX <= levelX + (width * .75) &&
-//                gp.minionList.getFirst().levelX + (width * .75) >= levelX &&
-//                mH.is_AttackPressed &&
-//                sword_Equipped &&
-//                gp.minionList.getFirst().levelY <= levelY + (height) &&
-//                gp.minionList.getFirst().levelY + (height * .75) >= levelY) {
-//            sword_Hit = true;
-//            gp.minion1.collision = true;
-//        }
-//
-//
-//            else if (gp.minionList.get(1).levelX  <= levelX + (width * .75) &&
-//                    gp.minionList.get(1).levelX + (width * .75) >= levelX &&
-//                    mH.is_AttackPressed &&
-//                    sword_Equipped &&
-//                    gp.minionList.get(1).levelY <= levelY + (height) &&
-//                    gp.minionList.get(1).levelY + (height * .75) >= levelY) {
-//                sword_Hit = true;
-//                gp.minion2.collision = true;
-//            }
-//
-//
-//            else if (gp.minionList.get(2).levelX  <= levelX + (width * .75) &&
-//                    gp.minionList.get(2).levelX + (width * .75) >= levelX &&
-//                    mH.is_AttackPressed &&
-//                    sword_Equipped &&
-//                    gp.minionList.get(2).levelY <= levelY + (height) &&
-//                    gp.minionList.get(2).levelY + (height * .75) >= levelY) {
-//                sword_Hit = true;
-//                gp.minion3.collision = true;
-//            }
 
     }
 
