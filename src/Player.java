@@ -204,24 +204,55 @@ public class Player extends Entity {
             sword_Equipped = true;
             gp.swordItem.collision = true;
         }
-        //Minion and Player collision, attacked minion collides with player sword
-        else if (gp.minion1.levelX <= levelX + (width * .75) &&
-                gp.minion1.levelX + (width * .75) >= levelX &&
-                mH.is_AttackPressed &&
-                sword_Equipped &&
-                gp.minion1.levelY <= levelY + (height) &&
-                gp.minion1.levelY + (height * .75) >= levelY) {
-            sword_Hit = true;
-            gp.minion1.collision = true;
-        } else if (gp.minion2.levelX <= levelX + (width * .75) && gp.minion2.levelX + (width * .75) >= levelX && mH.is_AttackPressed && sword_Equipped &&
-                gp.minion2.levelY <= levelY + (height) && gp.minion2.levelY + (height * .75) >= levelY) {
-            sword_Hit = true;
-            gp.minion2.collision = true;
-        } else if (gp.minion3.levelX <= levelX + (width * .75) && gp.minion3.levelX + (width * .75) >= levelX && mH.is_AttackPressed && sword_Equipped &&
-                gp.minion3.levelY <= levelY + (height) && gp.minion3.levelY + (height * .75) >= levelY) {
-            sword_Hit = true;
-            gp.minion3.collision = true;
+        for(int i = 0; i<gp.minionList.size();i++){
+            if(gp.minionList.get(i) != null){
+                //Minion and Player collision, attacked minion collides with player sword
+                if (gp.minionList.get(i).levelX <= levelX + (width * .75) &&
+                        gp.minionList.get(i).levelX + (width * .75) >= levelX &&
+                        mH.is_AttackPressed &&
+                        sword_Equipped &&
+                        gp.minionList.get(i).levelY <= levelY + (height) &&
+                        gp.minionList.get(i).levelY + (height * .75) >= levelY) {
+                    sword_Hit = true;
+                    gp.minionList.get(i).collision = true;
+                }
+            }
+
         }
+
+//        //Minion and Player collision, attacked minion collides with player sword
+//        if (gp.minionList.getFirst().levelX <= levelX + (width * .75) &&
+//                gp.minionList.getFirst().levelX + (width * .75) >= levelX &&
+//                mH.is_AttackPressed &&
+//                sword_Equipped &&
+//                gp.minionList.getFirst().levelY <= levelY + (height) &&
+//                gp.minionList.getFirst().levelY + (height * .75) >= levelY) {
+//            sword_Hit = true;
+//            gp.minion1.collision = true;
+//        }
+//
+//
+//            else if (gp.minionList.get(1).levelX  <= levelX + (width * .75) &&
+//                    gp.minionList.get(1).levelX + (width * .75) >= levelX &&
+//                    mH.is_AttackPressed &&
+//                    sword_Equipped &&
+//                    gp.minionList.get(1).levelY <= levelY + (height) &&
+//                    gp.minionList.get(1).levelY + (height * .75) >= levelY) {
+//                sword_Hit = true;
+//                gp.minion2.collision = true;
+//            }
+//
+//
+//            else if (gp.minionList.get(2).levelX  <= levelX + (width * .75) &&
+//                    gp.minionList.get(2).levelX + (width * .75) >= levelX &&
+//                    mH.is_AttackPressed &&
+//                    sword_Equipped &&
+//                    gp.minionList.get(2).levelY <= levelY + (height) &&
+//                    gp.minionList.get(2).levelY + (height * .75) >= levelY) {
+//                sword_Hit = true;
+//                gp.minion3.collision = true;
+//            }
+
     }
 
     public void update() {

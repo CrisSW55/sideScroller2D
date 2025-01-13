@@ -47,78 +47,79 @@ public class Minion extends Entity{
         }
     }
     public void update(){
-        //Minion sprite movements
-        if(direction.equals("right")){
-            if (levelX >= init_pos_LevelX+(gp.tile_Width*3)){direction = "left";}
-            else if(levelX < init_pos_LevelX + (gp.tile_Width*3)){direction = "right";levelX += speed;}
-        }
 
-        if(direction.equals("left")){
-            if (levelX <= init_pos_LevelX){direction = "right";}
-            else{direction = "left";levelX -= speed;}
-        }
+            //Minion sprite movements
+            if (direction.equals("right")) {
+                if (levelX >= init_pos_LevelX + (gp.tile_Width * 3)) {
+                    direction = "left";
+                } else if (levelX < init_pos_LevelX + (gp.tile_Width * 3)) {
+                    direction = "right";
+                    levelX += speed;
+                }
+            }
+
+            if (direction.equals("left")) {
+                if (levelX <= init_pos_LevelX) {
+                    direction = "right";
+                } else {
+                    direction = "left";
+                    levelX -= speed;
+                }
+            }
             //spriteIndex is the times update get called in this case total 60 times
             spriteIndex++;
             //So for every spriteIndex > 10, updates per 10 times, the spriteNum changes!
             if (direction.equals("left") && spriteIndex > 10) {
                 spriteNum = (spriteNum % 3) + 5; // Cycle through left sprites
                 spriteIndex = 0;
-            }
-            else if (direction.equals("right") && spriteIndex > 10) {
+            } else if (direction.equals("right") && spriteIndex > 10) {
                 spriteNum = (spriteNum % 3) + 1; // Cycle through right sprites
                 spriteIndex = 0;
             }
-//            //Minion standing
-//        else if(direction.equals("right")){
-//            // Handle right idle state
-//            spriteNum = 0; // Assuming 0 is for standing
-//        }
-//        else if(direction.equals("left")){
-//            // Handle left idle state
-//            spriteNum = 4; //Assuming 4 is for leftstanding
-//        }
-    }
-
-    public void repaint(Graphics2D g2){
-        switch (direction){
-            case "right":
-                if(spriteNum == 0){
-                    currentImage = stand;
-                }
-                else if(spriteNum == 1){
-                    currentImage = run1;
-                }
-                else if(spriteNum == 2){
-                    currentImage = run2;
-                }
-                else if(spriteNum == 3){
-                    currentImage = run3;
-                }
-                break;
-
-            case "left":
-                if(spriteNum == 4){
-                    currentImage = leftstand;
-                }
-                if(spriteNum == 5){
-                    currentImage = leftrun1;
-                }
-                else if(spriteNum == 6){
-                    currentImage = leftrun2;
-                }
-                else if(spriteNum == 7){
-                    currentImage = leftrun3;
-                }
-                break;
-
-        }
-
-        int screenX = levelX - gp.player.levelX + gp.player.screenX;
-        int screenY = levelY - gp.player.levelY + gp.player.screenY;
-        if(!collision){g2.drawImage(currentImage,screenX,screenY,width,height,null);}
-
 
 
     }
+
+    public void repaint(Graphics2D g2) {
+
+        switch (direction) {
+                case "right":
+                    if (spriteNum == 0) {
+                        currentImage = stand;
+                    } else if (spriteNum == 1) {
+                        currentImage = run1;
+                    } else if (spriteNum == 2) {
+                        currentImage = run2;
+                    } else if (spriteNum == 3) {
+                        currentImage = run3;
+                    }
+                    break;
+
+                case "left":
+                    if (spriteNum == 4) {
+                        currentImage = leftstand;
+                    }
+                    if (spriteNum == 5) {
+                        currentImage = leftrun1;
+                    } else if (spriteNum == 6) {
+                        currentImage = leftrun2;
+                    } else if (spriteNum == 7) {
+                        currentImage = leftrun3;
+                    }
+                    break;
+
+            }
+
+            int screenX = levelX - gp.player.levelX + gp.player.screenX;
+            int screenY = levelY - gp.player.levelY + gp.player.screenY;
+            if (!collision) {
+                g2.drawImage(currentImage, screenX, screenY, width, height, null);
+            }
+
+    }
+
+
+
+
 
 }

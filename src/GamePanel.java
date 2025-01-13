@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyListener;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable{
     int tile_Width = 48;
@@ -32,19 +33,31 @@ public class GamePanel extends JPanel implements Runnable{
     MouseHandler mH;
     Player player;
     Minion minion1, minion2,minion3;
+    ArrayList<Minion> minionList;
+    int minionCount;
     SwordItem swordItem;
     Color brightHorizon;
     TileManager tileMgr;
+    UserInterface userInterface;
     public  GamePanel(){
         //381 collides with first bottomTile!
         player = new Player( tile_Width*4,100,tile_Width*2,tile_Height*2,"right",this);
         player.loadImages();
+        //Initialize and load minions' images
         minion1 = new Minion(tile_Width*13,tile_Height*8,tile_Width*2,tile_Height*2,"right",this);
         minion1.loadImages();
         minion2 = new Minion(tile_Width*23,tile_Height*12,tile_Width*2,tile_Height*2,"right",this);
         minion2.loadImages();
         minion3 = new Minion(tile_Width*35,tile_Height*12,tile_Width*2,tile_Height*2,"right",this);
         minion3.loadImages();
+
+        //Initialize MinionList
+        minionList = new ArrayList<>();
+        minionList.add(minion1);
+        minionList.add(minion2);
+        minionList.add(minion3);
+        minionCount = minionList.size();
+
         //initial position tile_Width*77
         swordItem = new SwordItem((tile_Width*16),((tile_Height*4)+tile_Height/2)+(tile_Height/2),tile_Width,tile_Height,this);
         swordItem.loadItemImages();
@@ -53,6 +66,9 @@ public class GamePanel extends JPanel implements Runnable{
         tileMgr.read_TileMap();
         kH = player.kH;
         mH = player.mH;
+        //Userinterface
+        userInterface = new UserInterface(this);
+
         brightHorizon = new Color(240, 192, 180);
         setBackground(brightHorizon);
         //Allows the game panel to recognize the kH being used
@@ -60,12 +76,11 @@ public class GamePanel extends JPanel implements Runnable{
         this.addMouseListener(mH);
         this.setFocusable(true);
 
+
     }
     public void init_Thread(){
         gThread = new Thread(this);
         gThread.start();
-
-        //System.out.println("After starting thread!");
     }
 
 
@@ -96,9 +111,18 @@ public class GamePanel extends JPanel implements Runnable{
     //Handles any logic, such as entity positions,directions
     public void update() {
         player.update();
-        minion1.update();
-        minion2.update();
-        minion3.update();
+        for(int i = 0; i<minionList.size();i++){
+            //Update all minions within list
+            if(minionList.get(i)!= null){
+                if(minionList.get(i).collision){
+                    minionList.set(i,null);
+                    minionCount -= 1;
+                    break;
+                }
+                minionList.get(i).update();
+
+            }
+        }
     }
 
     //Handles graphics painted on the game panel, such as the rectangle shaped entity
@@ -108,10 +132,12 @@ public class GamePanel extends JPanel implements Runnable{
         Graphics2D g2= (Graphics2D) g;
         tileMgr.repaint(g2);
         player.repaint(g2);
-        minion1.repaint(g2);
-        minion2.repaint(g2);
-        minion3.repaint(g2);
+        for(int i = 0; i<minionList.size();i++){
+            //Repaint all minions within list
+            if(minionList.get(i)!= null){minionList.get(i).repaint(g2);}
+        }
         swordItem.repaint(g2);
+        userInterface.repaint(g2);
         g2.dispose();
     }
 }
